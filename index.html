@@ -69,7 +69,7 @@
     p.subtitle {
       color: #666;
       font-size: 13px;
-      line-height: 1.5;
+      line-height: 1.4;
       margin-bottom: 20px;
     }
 
@@ -84,7 +84,7 @@
       border: 1px solid #e2e8f0;
       border-radius: 14px;
       padding: 12px 16px;
-      min-height: 58px;
+      min-height: 56px;
       font-size: 14px;
       font-weight: 600;
       color: #2d3748;
@@ -93,22 +93,15 @@
       align-items: center;
       justify-content: flex-start;
       gap: 14px;
-      transition: background .2s, transform .2s;
+      transition: all .2s ease;
       box-shadow: 0 2px 6px rgba(0,0,0,.02);
-      text-align: left;
       width: 100%;
+      text-align: left;
     }
 
     .btn-option:active {
       transform: scale(.98);
       background: #f8fafc;
-    }
-
-    .btn-option:focus-visible,
-    .btn-close-modal:focus-visible,
-    .modal-close-x:focus-visible {
-      outline: 3px solid #80b3ff;
-      outline-offset: 3px;
     }
 
     .btn-icon-img {
@@ -146,9 +139,8 @@
       justify-content: center;
       opacity: 0;
       visibility: hidden;
-      transition: opacity .25s ease, visibility .25s ease;
+      transition: all .3s ease;
       z-index: 1000;
-      padding-top: 20px;
     }
 
     .modal-overlay.active {
@@ -167,7 +159,7 @@
       border-top-right-radius: 24px;
       padding: 28px 22px 36px;
       transform: translateY(100%);
-      transition: transform .25s ease;
+      transition: transform .3s ease;
       text-align: center;
     }
 
@@ -181,10 +173,11 @@
       right: 18px;
       background: #f0f2f5;
       border: none;
-      width: 36px;
-      height: 36px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      font-size: 22px;
+      font-size: 18px;
+      font-weight: bold;
       color: #666;
       cursor: pointer;
     }
@@ -213,7 +206,7 @@
     .modal-text {
       font-size: 13px;
       color: #555;
-      line-height: 1.6;
+      line-height: 1.5;
       margin-bottom: 20px;
       overflow-wrap: anywhere;
     }
@@ -233,41 +226,10 @@
     .btn-close-modal:active {
       background: #0052cc;
     }
-
-    .btn-secondary {
-      display: block;
-      width: 100%;
-      margin-top: 10px;
-      padding: 13px;
-      border: 1px solid #dbe2ea;
-      border-radius: 12px;
-      color: #2d3748;
-      background: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .status-message {
-      min-height: 18px;
-      margin-top: 12px;
-      color: #666;
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        transition-duration: .01ms !important;
-      }
-    }
   </style>
 </head>
 
 <body>
-
   <main class="card">
     <div class="brand"><span>I-</span>TIQUETA</div>
 
@@ -276,19 +238,21 @@
     <h2 id="nome-loja">DIMAS GALDINO DA SILVA</h2>
 
     <p class="subtitle">
-      Escolha seu aplicativo para continuar ou copie o código Pix.
+      Escolha o seu aplicativo para pagar ou copie o código Pix.
     </p>
 
     <div class="options-grid">
 
+      <!-- Carteira do Google -->
       <button class="btn-option" type="button"
         onclick="abrirOpcao('wallet')">
         <img class="btn-icon-img"
-          src="https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Google_Wallet_icon.svg/3840px-Google_Wallet_icon.svg.png"
-          alt="Carteira do Google">
+          src="https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Google_Wallet_icon.svg/3840px-Google_Wallet_icon.svg.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=thumbnail"
+          alt="Google Wallet">
         <span>Carteira do Google</span>
       </button>
 
+      <!-- PagBank / PagSeguro -->
       <button class="btn-option" type="button"
         onclick="abrirOpcao('pagbank')">
         <img class="btn-icon-img"
@@ -297,6 +261,7 @@
         <span>PagBank (PagSeguro)</span>
       </button>
 
+      <!-- Banco do Brasil -->
       <button class="btn-option" type="button"
         onclick="abrirOpcao('bb')">
         <img class="btn-icon-img"
@@ -305,14 +270,16 @@
         <span>Banco do Brasil</span>
       </button>
 
+      <!-- Itaú -->
       <button class="btn-option" type="button"
         onclick="abrirOpcao('itau')">
         <img class="btn-icon-img"
-          src="https://upload.wikimedia.org/wikipedia/commons/2/2d/2023_Ita%C3%BA_Unibanco_Logo.png"
+          src="https://upload.wikimedia.org/wikipedia/commons/2/2d/2023_Ita%C3%BA_Unibanco_Logo.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=original"
           alt="Itaú">
         <span>Banco Itaú</span>
       </button>
 
+      <!-- Copiar Pix -->
       <button class="btn-option btn-copy-only" type="button"
         onclick="abrirOpcao('copiar')">
         <img class="btn-icon-img"
@@ -322,273 +289,146 @@
       </button>
 
     </div>
-
-    <p class="status-message" id="status" role="status"
-      aria-live="polite"></p>
   </main>
 
+  <!-- Modal -->
   <div class="modal-overlay" id="modalInstrucoes"
-    aria-hidden="true" onclick="fecharModalFora(event)">
+    onclick="fecharModalFora(event)">
 
-    <section class="modal-content" role="dialog"
+    <div class="modal-content" role="dialog"
       aria-modal="true" aria-labelledby="modalTitulo">
 
       <button class="modal-close-x" type="button"
         aria-label="Fechar" onclick="fecharModal()">&times;</button>
 
-      <div class="modal-icon" id="modalIcone">✓</div>
+      <div class="modal-icon">✓</div>
 
       <h3 class="modal-title" id="modalTitulo">
-        Código Pix copiado!
+        Código Pix Copiado!
       </h3>
 
       <p class="modal-text" id="modalTexto">
-        O código Pix foi copiado para a área de transferência.
-        Abra seu banco, escolha Pix e depois Pix Copia e Cola.
-        Confira os dados do destinatário antes de confirmar.
+        O código Pix foi copiado para a memória do seu celular.
+        Abra o aplicativo do banco, escolha Pix e depois Pix Copia
+        e Cola. Confira os dados antes de confirmar o pagamento.
       </p>
 
       <button class="btn-close-modal" type="button"
         onclick="fecharModal()">Entendido</button>
-
-      <button class="btn-secondary" type="button"
-        id="btnTentarAbrir" hidden onclick="tentarAbrirBanco()">
-        Tentar abrir aplicativo novamente
-      </button>
-
-    </section>
+    </div>
   </div>
 
   <script>
-    /*
-     * IMPORTANTE:
-     * Mantido o código Pix fornecido pelo proprietário.
-     * Confira o destinatário e os dados antes de publicar.
-     */
     const pixPayload =
       "00020126580014br.gov.bcb.pix0136d4f08689-848c-4bd7-bbbc-bd364fc59cc427600016BR.COM.PAGSEGURO01368FD85AD6-2954-40F4-8AEE-D823EF21A4895204753853039865802BR5922DIMAS GALDINO DA SILVA6015Sao Jose do Ser62290525PAGS0000000002610100651776304106A";
 
-    const APPS = {
-      wallet: {
-        nome: "Carteira do Google",
-        pacote: "com.google.android.apps.walletnfcrel",
-        fallback:
-          "https://play.google.com/store/apps/details?id=com.google.android.apps.walletnfcrel"
-      },
-
-      bb: {
-        nome: "Banco do Brasil",
-        pacote: "br.com.bb.android",
-        fallback:
-          "https://play.google.com/store/apps/details?id=br.com.bb.android"
-      },
-
-      itau: {
-        nome: "Itaú",
-        pacote: "com.itau",
-        fallback:
-          "https://play.google.com/store/search?q=Ita%C3%BA&c=apps"
-      }
-    };
-
-    let ultimaOpcao = null;
-    let copiaConfirmada = false;
-    let temporizadorFallback = null;
-
-    const modal = document.getElementById("modalInstrucoes");
-    const status = document.getElementById("status");
-    const botaoTentar = document.getElementById("btnTentarAbrir");
-
     async function copiarCodigo() {
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(pixPayload);
-          return true;
-        }
-
-        const textarea = document.createElement("textarea");
-        textarea.value = pixPayload;
-        textarea.setAttribute("readonly", "");
-        textarea.style.position = "fixed";
-        textarea.style.top = "0";
-        textarea.style.left = "-9999px";
-
-        document.body.appendChild(textarea);
-        textarea.focus();
-        textarea.select();
-        textarea.setSelectionRange(0, textarea.value.length);
-
-        const sucesso = document.execCommand("copy");
-        textarea.remove();
-
-        if (sucesso) return true;
-
-        throw new Error("A cópia não foi confirmada.");
-      } catch (erro) {
-        console.error("Erro ao copiar Pix:", erro);
-        return false;
-      }
-    }
-
-    function abrirModal(titulo, mensagem, mostrarTentar = false) {
-      document.getElementById("modalTitulo").textContent = titulo;
-      document.getElementById("modalTexto").textContent = mensagem;
-
-      botaoTentar.hidden = !mostrarTentar;
-
-      modal.classList.add("active");
-      modal.setAttribute("aria-hidden", "false");
-
-      document.body.style.overflow = "hidden";
-
-      modal.querySelector(".modal-close-x").focus();
-    }
-
-    function fecharModal() {
-      modal.classList.remove("active");
-      modal.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
-
-      botaoTentar.hidden = true;
-    }
-
-    function fecharModalFora(event) {
-      if (event.target === modal) fecharModal();
-    }
-
-    /*
-     * Abre um aplicativo Android pelo pacote.
-     * Não garante acesso direto à tela de pagamento:
-     * isso depende dos links suportados pelo aplicativo.
-     */
-    function abrirAplicativoAndroid(tipo) {
-      const app = APPS[tipo];
-
-      if (!app) return;
-
-      if (!/Android/i.test(navigator.userAgent)) {
-        abrirModal(
-          app.nome,
-          "A abertura direta deste aplicativo é destinada ao Android. " +
-          "O código Pix permanece disponível para copiar e colar no banco."
-        );
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(pixPayload);
         return;
       }
 
-      clearTimeout(temporizadorFallback);
+      const textarea = document.createElement("textarea");
+      textarea.value = pixPayload;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
 
-      status.textContent = "Tentando abrir " + app.nome + "...";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
 
-      /*
-       * Intent explícita pelo pacote evita usar os esquemas
-       * genéricos que estavam misturando os botões.
-       */
-      const intent =
-        "intent://launch/#Intent;" +
-        "action=android.intent.action.MAIN;" +
-        "category=android.intent.category.LAUNCHER;" +
-        "package=" + app.pacote + ";" +
-        "S.browser_fallback_url=" +
-        encodeURIComponent(app.fallback) + ";" +
-        "end";
+      const sucesso = document.execCommand("copy");
+      document.body.removeChild(textarea);
 
-      window.location.href = intent;
+      if (!sucesso) {
+        throw new Error("Não foi possível copiar o código Pix.");
+      }
+    }
 
-      temporizadorFallback = setTimeout(function() {
-        /*
-         * O navegador pode não permitir detectar se o app abriu.
-         * Não redirecionamos automaticamente para a loja após
-         * um atraso: mostramos uma alternativa clara ao usuário.
-         */
-        status.textContent = "";
+    function abrirModal() {
+      document.getElementById("modalInstrucoes")
+        .classList.add("active");
+    }
 
-        abrirModal(
-          "Não foi possível confirmar a abertura",
-          "Tentamos abrir " + app.nome + ". Se ele não abriu, " +
-          "verifique se está instalado. O código Pix " +
-          (copiaConfirmada
-            ? "já foi copiado. Abra o banco e use Pix Copia e Cola."
-            : "pode ser copiado para você pagar pelo aplicativo."),
-          true
-        );
-      }, 1800);
+    function fecharModal() {
+      document.getElementById("modalInstrucoes")
+        .classList.remove("active");
+    }
+
+    function fecharModalFora(event) {
+      if (event.target.id === "modalInstrucoes") {
+        fecharModal();
+      }
     }
 
     async function abrirOpcao(tipo) {
-      ultimaOpcao = tipo;
-      status.textContent = "Preparando pagamento...";
-
-      if (navigator.vibrate) {
-        navigator.vibrate(60);
+      /*
+       * Copia o Pix antes de executar a ação do botão,
+       * mantendo o comportamento da versão original.
+       */
+      try {
+        await copiarCodigo();
+      } catch (erro) {
+        console.error("Erro ao copiar Pix:", erro);
       }
 
-      /*
-       * O PagBank mantém o comportamento original informado
-       * como funcional pelo proprietário.
-       */
+      if (navigator.vibrate) {
+        navigator.vibrate(80);
+      }
+
+      if (tipo === "copiar") {
+        abrirModal();
+        return;
+      }
+
       if (tipo === "pagbank") {
-        const sucesso = await copiarCodigo();
-        copiaConfirmada = sucesso;
-
-        status.textContent = sucesso
-          ? "Código Pix copiado."
-          : "Não foi possível confirmar a cópia do código Pix.";
-
+        /*
+         * Preservado exatamente como na versão original
+         * que você informou estar funcionando.
+         */
         window.location.href =
           "https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download";
         return;
       }
 
-      const sucesso = await copiarCodigo();
-      copiaConfirmada = sucesso;
+      if (tipo === "wallet") {
+        /*
+         * Não utilizar o comando genérico que estava
+         * encaminhando para o Itaú.
+         *
+         * Não existe aqui um link de pagamento Pix
+         * da Carteira do Google validado para este fluxo.
+         */
+        abrirModal();
+        return;
+      }
 
-      if (!sucesso) {
-        status.textContent = "";
+      if (tipo === "bb") {
+        // Esquema original do Banco do Brasil
+        window.location.href = "bancodobrasil://";
 
-        abrirModal(
-          "Não foi possível copiar automaticamente",
-          "Seu navegador não confirmou a cópia. Tente novamente " +
-          "ou abra o banco e copie o código Pix por outro meio."
-        );
+        setTimeout(function() {
+          if (!document.hidden) {
+            abrirModal();
+          }
+        }, 1000);
 
         return;
       }
 
-      if (tipo === "copiar") {
-        status.textContent = "Código Pix copiado.";
+      if (tipo === "itau") {
+        // Esquema original que você informou funcionar
+        window.location.href = "itau://";
 
-        abrirModal(
-          "Código Pix copiado!",
-          "O código Pix está na área de transferência. Abra seu " +
-          "banco, escolha Pix Copia e Cola e confira o destinatário " +
-          "e o valor antes de confirmar o pagamento."
-        );
+        setTimeout(function() {
+          if (!document.hidden) {
+            abrirModal();
+          }
+        }, 1000);
 
         return;
       }
-
-      if (tipo === "wallet" || tipo === "bb" || tipo === "itau") {
-        abrirAplicativoAndroid(tipo);
-        return;
-      }
-
-      status.textContent = "";
     }
-
-    function tentarAbrirBanco() {
-      if (!ultimaOpcao || ultimaOpcao === "copiar" ||
-          ultimaOpcao === "pagbank") {
-        return;
-      }
-
-      fecharModal();
-      abrirAplicativoAndroid(ultimaOpcao);
-    }
-
-    document.addEventListener("keydown", function(event) {
-      if (event.key === "Escape") fecharModal();
-    });
   </script>
-
 </body>
 </html>
