@@ -1,233 +1,252 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pagamento via Pix</title>
+  <title>I-TIQUETA | Pagamento Pix NFC & QR Code</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Inter Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              blue: '#0066FF',
+              dark: '#0F172A',
+              lightBg: '#F8FAFC',
+              emerald: '#10B981',
+              pagbank: '#00B140',
+              mpago: '#009EE3',
+              nubank: '#820AD1',
+              itau: '#EC7000'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+    /* Custom scrollbar and modal transitions */
+    .modal-backdrop {
+      background-color: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
     }
-    body { 
-      background-color: #f0f2f5; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      min-height: 100vh; 
-      padding: 20px 12px; 
+    .sheet-transition {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .card { 
-      background: #ffffff; 
-      border-radius: 20px; 
-      padding: 28px 20px; 
-      max-width: 380px; 
-      width: 100%; 
-      box-shadow: 0 10px 25px rgba(0,0,0,0.06); 
-      text-align: center; 
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.95; transform: scale(0.99); }
     }
-    .badge { 
-      background: #e8f5e9; 
-      color: #2e7d32; 
-      font-weight: 700; 
-      font-size: 11px; 
-      padding: 4px 12px; 
-      border-radius: 20px; 
-      display: inline-block; 
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    h2 { 
-      color: #1a1a1a; 
-      font-size: 18px; 
-      font-weight: 700;
-      margin-bottom: 6px; 
-    }
-    p.subtitle { 
-      color: #666; 
-      font-size: 13px; 
-      line-height: 1.4;
-      margin-bottom: 24px; 
-    }
-    
-    .btn-pay { 
-      background: #0066ff; 
-      color: #ffffff; 
-      font-size: 16px; 
-      font-weight: 700; 
-      border: none; 
-      border-radius: 14px; 
-      padding: 18px; 
-      width: 100%; 
-      cursor: pointer; 
-      transition: all 0.2s ease; 
-      box-shadow: 0 4px 14px rgba(0, 102, 255, 0.3);
-    }
-    .btn-pay:active { 
-      transform: scale(0.98);
-      background: #0052cc; 
-    }
-
-    /* Modal / Pop-up Styling */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      z-index: 1000;
-    }
-    .modal-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    .modal-content {
-      background: #ffffff;
-      width: 100%;
-      max-width: 420px;
-      border-top-left-radius: 24px;
-      border-top-right-radius: 24px;
-      padding: 24px 20px 32px 20px;
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-    .modal-overlay.active .modal-content {
-      transform: translateY(0);
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-    .modal-header h3 {
-      font-size: 16px;
-      color: #1a1a1a;
-      font-weight: 700;
-    }
-    .close-btn {
-      background: #f0f2f5;
-      border: none;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      font-size: 16px;
-      font-weight: bold;
-      color: #666;
-      cursor: pointer;
-    }
-
-    .banks-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-    .btn-bank {
-      background: #f8f9fa;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 14px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #333;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-    .btn-bank:active {
-      background: #e2e8f0;
-      transform: scale(0.97);
-    }
-
-    .status-msg { 
-      margin-top: 16px; 
-      padding: 12px;
-      background: #e8f5e9;
-      border-radius: 10px;
-      font-size: 13px; 
-      color: #2e7d32; 
-      font-weight: 600; 
-      display: none; 
+    .animate-pulse-subtle {
+      animation: pulse-subtle 3s infinite ease-in-out;
     }
   </style>
 </head>
-<body>
+<body class="bg-slate-100 font-sans text-slate-800 min-h-screen flex flex-col justify-between items-center p-4 sm:p-6">
 
-  <div class="card">
-    <span class="badge">● Recebedor Pix</span>
-    <h2 id="nome-loja">DIMAS GALDINO DA SILVA</h2>
-    <p class="subtitle">Toque abaixo para selecionar o aplicativo do seu banco e concluir a transferência.</p>
+  <!-- Header / Branding -->
+  <header class="w-full max-w-md my-4 text-center">
+    <div class="inline-flex items-center justify-center space-x-1">
+      <span class="text-4xl font-black text-brand-blue tracking-tighter">I</span>
+      <span class="text-4xl font-extrabold text-slate-900 tracking-tight">-TIQUETA</span>
+    </div>
+    <p class="text-xs font-medium text-slate-500 uppercase tracking-widest mt-1">Tecnologia NFC & QR Code para Balcão</p>
+  </header>
 
-    <button class="btn-pay" onclick="abrirModal()">
-      Pagar via Pix
-    </button>
+  <!-- Main Receiver Card -->
+  <main class="w-full max-w-md bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden transition-all duration-300">
+    <!-- Card Top Header Badge -->
+    <div class="bg-slate-900 p-6 text-white text-center relative overflow-hidden">
+      <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-brand-blue opacity-20 rounded-full blur-xl"></div>
+      
+      <div class="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold px-3 py-1 rounded-full mb-3">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        Pronto para Receber Pix
+      </div>
+      
+      <h1 id="receiverName" class="text-xl font-bold tracking-tight text-white">DIMAS GALDINO DA SILVA</h1>
+      <p class="text-xs text-slate-400 mt-1">Estabelecimento Comercial Mapeado</p>
+    </div>
 
-    <div id="status" class="status-msg">
-      ✓ Código Pix copiado!
+    <!-- Payload Tester Selector -->
+    <div class="p-5 bg-slate-50 border-b border-slate-100">
+      <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 text-left">
+        🧪 Seletor de Teste de Payload:
+      </label>
+      <div class="grid grid-cols-2 gap-2">
+        <button id="btnSelectPagBank" onclick="switchPayload('pagbank')" class="py-2 px-3 text-xs font-semibold rounded-xl border-2 transition-all flex items-center justify-center gap-1.5 bg-brand-pagbank/10 border-brand-pagbank text-brand-pagbank">
+          <span>💚</span> PagBank
+        </button>
+        <button id="btnSelectMP" onclick="switchPayload('mercadopago')" class="py-2 px-3 text-xs font-semibold rounded-xl border-2 transition-all flex items-center justify-center gap-1.5 bg-white border-slate-200 text-slate-600 hover:border-brand-mpago">
+          <span>🟦</span> Mercado Pago
+        </button>
+      </div>
+    </div>
+
+    <!-- CTA & Action Area -->
+    <div class="p-6 text-center space-y-4">
+      <p class="text-sm text-slate-600 leading-relaxed">
+        Aproxime o celular da placa NFC ou toque abaixo para escolher seu aplicativo bancário e efetuar o pagamento.
+      </p>
+
+      <!-- Main Action Button -->
+      <button onclick="openModal()" class="w-full py-4 px-6 bg-brand-blue hover:bg-blue-700 active:scale-[0.98] text-white font-bold text-lg rounded-2xl shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-2 animate-pulse-subtle">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+        </svg>
+        Pagar via Pix
+      </button>
+
+      <!-- Confirmation / Notification Banner -->
+      <div id="statusToast" class="hidden p-4 bg-emerald-50 border border-emerald-200 rounded-2xl text-left transition-all">
+        <div class="flex items-start gap-3">
+          <div class="p-2 bg-emerald-500 text-white rounded-xl text-lg flex-shrink-0">✓</div>
+          <div>
+            <h4 class="text-xs font-bold text-emerald-900 uppercase tracking-wider">Código Pix Copiado!</h4>
+            <p id="statusToastText" class="text-xs text-emerald-700 mt-0.5">
+              O código foi salvo na memória do seu celular. Redirecionando para o aplicativo...
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bank Selection Slide-up Sheet / Modal -->
+  <div id="bankModal" class="fixed inset-0 z-50 modal-backdrop opacity-0 pointer-events-none transition-opacity duration-300 flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div id="modalSheet" class="w-full max-w-md bg-white rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl sheet-transition transform translate-y-full sm:translate-y-8 max-h-[85vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
+        <div>
+          <h3 class="text-lg font-bold text-slate-900">Selecione seu Banco</h3>
+          <p class="text-xs text-slate-500">Escolha onde você tem conta instalada</p>
+        </div>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-lg transition-colors">
+          &times;
+        </button>
+      </div>
+
+      <!-- Mercado Pago Advanced Deep Link Strategies Section -->
+      <div class="mb-4 p-3 bg-blue-50 border border-blue-100 rounded-2xl text-left">
+        <span class="text-[10px] font-bold text-brand-blue uppercase tracking-wider block mb-1">⚡ Testes Avançados - Mercado Pago:</span>
+        <div class="grid grid-cols-2 gap-2 mt-1">
+          <button onclick="executeMPStrategy('intent_wallet')" class="py-2 px-2 text-[11px] font-semibold bg-white text-slate-700 rounded-xl border border-slate-200 hover:border-brand-mpago text-left flex items-center gap-1 shadow-sm">
+            <span>🔹</span> Intent Wallet
+          </button>
+          <button onclick="executeMPStrategy('intent_action')" class="py-2 px-2 text-[11px] font-semibold bg-white text-slate-700 rounded-xl border border-slate-200 hover:border-brand-mpago text-left flex items-center gap-1 shadow-sm">
+            <span>🔹</span> Intent View
+          </button>
+          <button onclick="executeMPStrategy('scheme_mpago')" class="py-2 px-2 text-[11px] font-semibold bg-white text-slate-700 rounded-xl border border-slate-200 hover:border-brand-mpago text-left flex items-center gap-1 shadow-sm">
+            <span>🔹</span> mpago://
+          </button>
+          <button onclick="executeMPStrategy('scheme_mercado')" class="py-2 px-2 text-[11px] font-semibold bg-white text-slate-700 rounded-xl border border-slate-200 hover:border-brand-mpago text-left flex items-center gap-1 shadow-sm">
+            <span>🔹</span> mercadopago://
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Banks Grid -->
+      <div class="grid grid-cols-2 gap-2.5">
+        <button onclick="triggerBank('pagbank')" class="py-3 px-3 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 border border-slate-200 rounded-xl font-semibold text-slate-800 text-xs flex items-center justify-center gap-2 transition-all">
+          <span class="text-base">💚</span> PagBank
+        </button>
+        <button onclick="triggerBank('mercadopago')" class="py-3 px-3 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 border border-slate-200 rounded-xl font-semibold text-slate-800 text-xs flex items-center justify-center gap-2 transition-all">
+          <span class="text-base">🟦</span> Mercado Pago
+        </button>
+        <button onclick="triggerBank('nubank')" class="py-3 px-3 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 border border-slate-200 rounded-xl font-semibold text-slate-800 text-xs flex items-center justify-center gap-2 transition-all">
+          <span class="text-base">💜</span> Nubank
+        </button>
+        <button onclick="triggerBank('itau')" class="py-3 px-3 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 border border-slate-200 rounded-xl font-semibold text-slate-800 text-xs flex items-center justify-center gap-2 transition-all">
+          <span class="text-base">🟧</span> Itaú
+        </button>
+        <button onclick="triggerBank('bradesco')" class="py-3 px-3 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 border border-slate-200 rounded-xl font-semibold text-slate-800 text-xs flex items-center justify-center gap-2 transition-all">
+          <span class="text-base">🟥</span> Bradesco
+        </button>
+        <button onclick="triggerBank('bb')" class="py-3 px-3 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 border border-slate-200 rounded-xl font-semibold text-slate-800 text-xs flex items-center justify-center gap-2 transition-all">
+          <span class="text-base">🟡</span> Banco do Brasil
+        </button>
+        <button onclick="triggerBank('inter')" class="py-3 px-3 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 border border-slate-200 rounded-xl font-semibold text-slate-800 text-xs flex items-center justify-center gap-2 transition-all">
+          <span class="text-base">🟠</span> Inter
+        </button>
+        <button onclick="triggerBank('caixa')" class="py-3 px-3 bg-slate-50 hover:bg-slate-100 active:bg-slate-200 border border-slate-200 rounded-xl font-semibold text-slate-800 text-xs flex items-center justify-center gap-2 transition-all">
+          <span class="text-base">🔵</span> Caixa
+        </button>
+      </div>
+
+      <!-- Copy Only Fallback Button -->
+      <button onclick="triggerBank('copy_only')" class="w-full mt-3 py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-xl flex items-center justify-center gap-2 transition-all shadow-sm">
+        <span>📋</span> Apenas Copiar Código Pix
+      </button>
     </div>
   </div>
 
-  <!-- Pop-up Modal de Seleção de Banco -->
-  <div class="modal-overlay" id="modalOverlay" onclick="fecharModalFora(event)">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Selecione seu Banco</h3>
-        <button class="close-btn" onclick="fecharModal()">&times;</button>
-      </div>
-
-      <div class="banks-grid">
-        <button class="btn-bank" onclick="abrirBanco('pagbank')">💚 PagBank</button>
-        <button class="btn-bank" onclick="abrirBanco('mercadopago')">🟦 Mercado Pago</button>
-        <button class="btn-bank" onclick="abrirBanco('nubank')">💜 Nubank</button>
-        <button class="btn-bank" onclick="abrirBanco('itau')">🟧 Itaú</button>
-        <button class="btn-bank" onclick="abrirBanco('bradesco')">🟥 Bradesco</button>
-        <button class="btn-bank" onclick="abrirBanco('bb')">🟡 Banco do Brasil</button>
-        <button class="btn-bank" onclick="abrirBanco('inter')">🟠 Inter</button>
-        <button class="btn-bank" onclick="abrirBanco('caixa')">🔵 Caixa</button>
-        <button class="btn-bank" onclick="abrirBanco('santander')">🔴 Santander</button>
-        <button class="btn-bank" onclick="abrirBanco('c6')">⚫ C6 Bank</button>
-        <button class="btn-bank" style="grid-column: span 2;" onclick="abrirBanco('outro')">📋 Copiar Código e Abrir Manualmente</button>
-      </div>
-    </div>
-  </div>
+  <!-- Footer -->
+  <footer class="w-full max-w-md my-4 text-center text-xs text-slate-400">
+    Placa de Balcão Inteligente &bull; Powered by <span class="font-bold text-slate-600"><span class="text-brand-blue">I</span>-TIQUETA</span>
+  </footer>
 
   <script>
-    const pixPayload = "00020126580014br.gov.bcb.pix0136d4f08689-848c-4bd7-bbbc-bd364fc59cc427600016BR.COM.PAGSEGURO01368FD85AD6-2954-40F4-8AEE-D823EF21A4895204753853039865802BR5922DIMAS GALDINO DA SILVA6015Sao Jose do Ser62290525PAGS0000000002610100651776304106A";
+    // Configured Payloads for Testing
+    const payloads = {
+      pagbank: "00020126580014br.gov.bcb.pix0136d4f08689-848c-4bd7-bbbc-bd364fc59cc427600016BR.COM.PAGSEGURO01368FD85AD6-2954-40F4-8AEE-D823EF21A4895204753853039865802BR5922DIMAS GALDINO DA SILVA6015Sao Jose do Ser62290525PAGS0000000002610100651776304106A",
+      mercadopago: "00020126580014br.gov.bcb.pix0136123e4567-e89b-12d3-a456-4266141740005204000053039865802BR5922DIMAS GALDINO DA SILVA6015Sao Jose do Ser62070503***6304A1B2"
+    };
 
-    function abrirModal() {
-      document.getElementById('modalOverlay').classList.add('active');
-    }
+    let activePayloadKey = 'pagbank';
 
-    function fecharModal() {
-      document.getElementById('modalOverlay').classList.remove('active');
-    }
+    // Switch active payload for testing
+    function switchPayload(key) {
+      activePayloadKey = key;
+      const btnPagBank = document.getElementById('btnSelectPagBank');
+      const btnMP = document.getElementById('btnSelectMP');
 
-    function fecharModalFora(e) {
-      if (e.target.id === 'modalOverlay') {
-        fecharModal();
+      if (key === 'pagbank') {
+        btnPagBank.className = "py-2 px-3 text-xs font-semibold rounded-xl border-2 transition-all flex items-center justify-center gap-1.5 bg-brand-pagbank/10 border-brand-pagbank text-brand-pagbank";
+        btnMP.className = "py-2 px-3 text-xs font-semibold rounded-xl border-2 transition-all flex items-center justify-center gap-1.5 bg-white border-slate-200 text-slate-600 hover:border-brand-mpago";
+      } else {
+        btnMP.className = "py-2 px-3 text-xs font-semibold rounded-xl border-2 transition-all flex items-center justify-center gap-1.5 bg-brand-mpago/10 border-brand-mpago text-brand-mpago";
+        btnPagBank.className = "py-2 px-3 text-xs font-semibold rounded-xl border-2 transition-all flex items-center justify-center gap-1.5 bg-white border-slate-200 text-slate-600 hover:border-brand-pagbank";
       }
     }
 
-    async function copiarCodigo() {
+    // Modal Control Functions
+    function openModal() {
+      const modal = document.getElementById('bankModal');
+      const sheet = document.getElementById('modalSheet');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      sheet.classList.remove('translate-y-full', 'sm:translate-y-8');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('bankModal');
+      const sheet = document.getElementById('modalSheet');
+      sheet.classList.add('translate-y-full', 'sm:translate-y-8');
+      setTimeout(() => {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+      }, 200);
+    }
+
+    // Close modal on backdrop click
+    document.getElementById('bankModal').addEventListener('click', (e) => {
+      if (e.target.id === 'bankModal') closeModal();
+    });
+
+    // Copy to Clipboard with Secure Fallback
+    async function copyToClipboard(text) {
       if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(pixPayload);
+        await navigator.clipboard.writeText(text);
       } else {
         const textarea = document.createElement("textarea");
-        textarea.value = pixPayload;
+        textarea.value = text;
         textarea.style.position = "fixed";
         textarea.style.opacity = "0";
         document.body.appendChild(textarea);
@@ -237,53 +256,92 @@
       }
     }
 
-    async function abrirBanco(bancoKey) {
-      await copiarCodigo();
-      fecharModal();
+    // Show Toast Feedback
+    function showToast(message) {
+      const toast = document.getElementById('statusToast');
+      const toastText = document.getElementById('statusToastText');
+      toastText.innerText = message;
+      toast.classList.remove('hidden');
+    }
 
-      const statusEl = document.getElementById('status');
+    // Execute Specific Mercado Pago Deep Link Strategy
+    async function executeMPStrategy(strategy) {
+      await copyToClipboard(payloads[activePayloadKey]);
+      closeModal();
+      showToast("Código Pix copiado! Executando estratégia de abertura do Mercado Pago...");
+
       const isAndroid = /Android/i.test(navigator.userAgent);
 
-      if (bancoKey === 'outro') {
-        statusEl.innerText = "✓ Código Pix copiado! Abra o app do seu banco e selecione 'Pix Copia e Cola'.";
-        statusEl.style.display = 'block';
+      setTimeout(() => {
+        switch (strategy) {
+          case 'intent_wallet':
+            if (isAndroid) {
+              window.location.href = "intent://wallet#Intent;scheme=mercadopago;package=com.mercadopago.wallet;end";
+            } else {
+              window.location.href = "mercadopago://";
+            }
+            break;
+          case 'intent_action':
+            if (isAndroid) {
+              window.location.href = "intent://mp#Intent;action=android.intent.action.VIEW;data=mercadopago://;package=com.mercadopago.wallet;end";
+            } else {
+              window.location.href = "mercadopago://";
+            }
+            break;
+          case 'scheme_mpago':
+            window.location.href = "mpago://";
+            break;
+          case 'scheme_mercado':
+            window.location.href = "mercadopago://";
+            break;
+        }
+      }, 300);
+    }
+
+    // Main Bank Dispatcher
+    async function triggerBank(bankKey) {
+      await copyToClipboard(payloads[activePayloadKey]);
+      closeModal();
+
+      if (bankKey === 'copy_only') {
+        showToast("Código Pix copiado com sucesso! Abra o aplicativo do seu banco e cole na opção Pix Copia e Cola.");
         return;
       }
 
-      statusEl.innerText = "✓ Código copiado! Abrindo o aplicativo...";
-      statusEl.style.display = 'block';
+      showToast("Código Pix copiado! Redirecionando para o aplicativo bancário...");
+
+      const isAndroid = /Android/i.test(navigator.userAgent);
 
       setTimeout(() => {
-        if (bancoKey === 'pagbank') {
-          window.location.href = "https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download";
-        } else if (bancoKey === 'mercadopago') {
-          if (isAndroid) {
-            window.location.href = "intent://wallet#Intent;scheme=mercadopago;package=com.mercadopago.wallet;end";
-          } else {
-            window.location.href = "mercadopago://";
-          }
-        } else if (bancoKey === 'nubank') {
-          window.location.href = "nubank://";
-        } else if (bancoKey === 'itau') {
-          window.location.href = "itau://";
-        } else if (bancoKey === 'bradesco') {
-          window.location.href = "bradesco://";
-        } else if (bancoKey === 'bb') {
-          window.location.href = "bancodobrasil://";
-        } else if (bancoKey === 'inter') {
-          window.location.href = "bancointer://";
-        } else if (bancoKey === 'caixa') {
-          window.location.href = "caixa://";
-        } else if (bancoKey === 'santander') {
-          window.location.href = "santander://";
-        } else if (bancoKey === 'c6') {
-          window.location.href = "c6bank://";
-        } else {
-          statusEl.innerText = "✓ Código Pix copiado! Abra o app do seu banco.";
+        switch (bankKey) {
+          case 'pagbank':
+            window.location.href = "https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download";
+            break;
+          case 'mercadopago':
+            executeMPStrategy('intent_wallet');
+            break;
+          case 'nubank':
+            window.location.href = "nubank://";
+            break;
+          case 'itau':
+            window.location.href = "itau://";
+            break;
+          case 'bradesco':
+            window.location.href = "bradesco://";
+            break;
+          case 'bb':
+            window.location.href = "bancodobrasil://";
+            break;
+          case 'inter':
+            window.location.href = "bancointer://";
+            break;
+          case 'caixa':
+            window.location.href = "caixa://";
+            break;
         }
       }, 300);
     }
   </script>
-
 </body>
 </html>
+```
