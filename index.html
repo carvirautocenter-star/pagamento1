@@ -3,300 +3,291 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f0f2f5">
-  <title>Pagamento via Pix - I-TIQUETA</title>
+  <meta name="theme-color" content="#071b35">
+  <title>Pagamento Pix - I-TIQUETA</title>
 
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, Helvetica, Arial, sans-serif;
     }
 
     body {
-      background-color: #f0f2f5;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #071b35;
+      color: #ffffff;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      padding: 20px 14px;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      margin: auto;
     }
 
     .card {
-      background: #fff;
-      border-radius: 24px;
-      padding: 28px 20px;
-      max-width: 390px;
-      width: 100%;
-      box-shadow: 0 12px 30px rgba(0,0,0,.08);
-      text-align: center;
-    }
-
-    .brand {
-      font-size: 22px;
-      font-weight: 800;
-      color: #1a1a1a;
-      letter-spacing: -.5px;
-      margin-bottom: 16px;
-    }
-
-    .brand span { color: #0066ff; }
-
-    .badge {
-      background: #e8f5e9;
-      color: #2e7d32;
-      font-weight: 700;
-      font-size: 11px;
-      padding: 4px 12px;
+      background: #ffffff;
+      color: #172033;
       border-radius: 20px;
-      display: inline-block;
+      padding: 25px 20px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+    }
+
+    .logo {
+      text-align: center;
       margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: .5px;
+      color: #0b65c2;
+      font-size: 27px;
+      font-weight: 800;
+      letter-spacing: 1px;
     }
 
-    h2 {
-      color: #1a1a1a;
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 4px;
+    h1 {
+      text-align: center;
+      font-size: 23px;
+      margin-bottom: 10px;
     }
 
-    p.subtitle {
-      color: #666;
-      font-size: 13px;
-      line-height: 1.4;
+    .descricao {
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #667085;
+      margin-bottom: 22px;
+    }
+
+    .valor {
+      text-align: center;
+      background: #eef6ff;
+      border-radius: 12px;
+      padding: 15px;
       margin-bottom: 20px;
     }
 
-    .options-grid {
+    .valor small {
+      display: block;
+      color: #667085;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+
+    .valor strong {
+      color: #0759a5;
+      font-size: 26px;
+    }
+
+    .subtitulo {
+      font-size: 15px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    .botoes {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 11px;
     }
 
-    .btn-option {
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
-      padding: 12px 16px;
-      min-height: 56px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #2d3748;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 14px;
-      transition: all .2s ease;
-      box-shadow: 0 2px 6px rgba(0,0,0,.02);
+    button {
       width: 100%;
-      text-align: left;
-    }
-
-    .btn-option:active {
-      transform: scale(.98);
-      background: #f8fafc;
-    }
-
-    .btn-icon-img {
-      width: 32px;
-      height: 32px;
-      object-fit: contain;
-      border-radius: 6px;
-      flex-shrink: 0;
-    }
-
-    .btn-copy-only {
-      background: #0066ff;
-      color: #fff;
+      min-height: 51px;
+      padding: 13px 15px;
       border: none;
-      font-weight: 700;
-      margin-top: 6px;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(0,102,255,.25);
+      border-radius: 11px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .btn-copy-only:active { background: #0052cc; }
-
-    .btn-copy-only img {
-      filter: brightness(0) invert(1);
+    button:active {
+      opacity: 0.8;
     }
 
-    .modal-overlay {
+    .btn-wallet {
+      background: #edf2f7;
+      color: #263445;
+    }
+
+    .btn-pagbank {
+      background: #00a868;
+      color: #ffffff;
+    }
+
+    .btn-bb {
+      background: #f8d117;
+      color: #003882;
+    }
+
+    .btn-itau {
+      background: #ec7000;
+      color: #ffffff;
+    }
+
+    .btn-copiar {
+      background: #0759a5;
+      color: #ffffff;
+    }
+
+    .aviso {
+      margin-top: 17px;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #667085;
+    }
+
+    .modal-fundo {
+      display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.5);
-      display: flex;
-      align-items: flex-end;
+      background: rgba(0, 0, 0, 0.65);
+      align-items: center;
       justify-content: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: all .3s ease;
-      z-index: 1000;
+      padding: 20px;
+      z-index: 9999;
     }
 
-    .modal-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .modal-content {
-      position: relative;
-      background: #fff;
+    .modal {
+      background: #ffffff;
+      color: #172033;
+      border-radius: 17px;
+      padding: 25px 20px;
       width: 100%;
-      max-width: 420px;
-      max-height: 90vh;
-      overflow-y: auto;
-      border-radius: 24px 24px 0 0;
-      padding: 28px 22px 36px;
-      transform: translateY(100%);
-      transition: transform .3s ease;
+      max-width: 360px;
       text-align: center;
     }
 
-    .modal-overlay.active .modal-content {
-      transform: translateY(0);
+    .modal h2 {
+      font-size: 21px;
+      margin-bottom: 12px;
     }
 
-    .modal-close-x {
-      position: absolute;
-      top: 16px;
-      right: 18px;
-      background: #f0f2f5;
-      border: none;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      font-size: 18px;
-      font-weight: bold;
-      color: #666;
-      cursor: pointer;
-    }
-
-    .modal-icon {
-      width: 48px;
-      height: 48px;
-      background: #e8f5e9;
-      color: #2e7d32;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 14px;
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .modal-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 8px;
-    }
-
-    .modal-text {
-      font-size: 13px;
-      color: #555;
-      line-height: 1.5;
-      margin-bottom: 20px;
-      overflow-wrap: anywhere;
-    }
-
-    .btn-close-modal {
-      background: #0066ff;
-      border: none;
-      border-radius: 12px;
-      padding: 14px;
-      width: 100%;
+    .modal p {
       font-size: 14px;
-      font-weight: 700;
-      color: #fff;
-      cursor: pointer;
+      line-height: 1.55;
+      color: #596579;
+      margin-bottom: 18px;
     }
 
-    .btn-close-modal:active { background: #0052cc; }
+    .btn-ok {
+      background: #0759a5;
+      color: #ffffff;
+    }
+
+    .btn-fechar {
+      margin-top: 9px;
+      background: #edf2f7;
+      color: #263445;
+    }
+
+    @media (max-width: 360px) {
+      .card {
+        padding: 21px 15px;
+      }
+
+      h1 {
+        font-size: 21px;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <main class="card">
-    <div class="brand"><span>I-</span>TIQUETA</div>
-    <span class="badge">● Recebedor Pix</span>
-    <h2 id="nome-loja">DIMAS GALDINO DA SILVA</h2>
+  <main class="container">
+    <section class="card">
+      <div class="logo">I-TIQUETA</div>
 
-    <p class="subtitle">
-      Escolha o seu aplicativo para pagar ou copie o código Pix.
-    </p>
+      <h1>Pagamento via Pix</h1>
 
-    <div class="options-grid">
+      <p class="descricao">
+        Escolha seu aplicativo bancário para continuar com o pagamento.
+      </p>
 
-      <button class="btn-option" type="button"
-        onclick="abrirOpcao('wallet')">
-        <img class="btn-icon-img"
-          src="https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Google_Wallet_icon.svg/3840px-Google_Wallet_icon.svg.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=thumbnail"
-          alt="Google Wallet">
-        <span>Carteira do Google</span>
-      </button>
+      <div class="valor">
+        <small>Pagamento via Pix</small>
+        <strong>Confirme o valor</strong>
+      </div>
 
-      <button class="btn-option" type="button"
-        onclick="abrirOpcao('pagbank')">
-        <img class="btn-icon-img"
-          src="https://ribnet.com.br/wp-content/uploads/2024/04/pagbank.png"
-          alt="PagBank">
-        <span>PagBank (PagSeguro)</span>
-      </button>
+      <p class="subtitulo">Selecione uma opção</p>
 
-      <button class="btn-option" type="button"
-        onclick="abrirOpcao('bb')">
-        <img class="btn-icon-img"
-          src="https://assets.hgbrasil.com/finance/companies/big/banco-do-brasil.png"
-          alt="Banco do Brasil">
-        <span>Banco do Brasil</span>
-      </button>
+      <div class="botoes">
+        <button
+          class="btn-wallet"
+          type="button"
+          onclick="abrirOpcao('wallet')">
+          Carteira do Google
+        </button>
 
-      <button class="btn-option" type="button"
-        onclick="abrirOpcao('itau')">
-        <img class="btn-icon-img"
-          src="https://upload.wikimedia.org/wikipedia/commons/2/2d/2023_Ita%C3%BA_Unibanco_Logo.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=original"
-          alt="Itaú">
-        <span>Banco Itaú</span>
-      </button>
+        <button
+          class="btn-pagbank"
+          type="button"
+          onclick="abrirOpcao('pagbank')">
+          PagSeguro / PagBank
+        </button>
 
-      <button class="btn-option btn-copy-only" type="button"
-        onclick="abrirOpcao('copiar')">
-        <img class="btn-icon-img"
-          src="https://cdn-icons-png.flaticon.com/512/84/84185.png"
-          alt="">
-        <span>Apenas Copiar Código Pix</span>
-      </button>
+        <button
+          class="btn-bb"
+          type="button"
+          onclick="abrirOpcao('bb')">
+          Banco do Brasil
+        </button>
 
-    </div>
+        <button
+          class="btn-itau"
+          type="button"
+          onclick="abrirOpcao('itau')">
+          Itaú
+        </button>
+
+        <button
+          class="btn-copiar"
+          type="button"
+          onclick="abrirOpcao('copiar')">
+          Copiar código Pix
+        </button>
+      </div>
+
+      <p class="aviso">
+        Após abrir seu aplicativo bancário, confira os dados e confirme
+        o pagamento somente se estiverem corretos.
+      </p>
+    </section>
   </main>
 
-  <div class="modal-overlay" id="modalInstrucoes"
+  <div
+    class="modal-fundo"
+    id="modalPix"
     onclick="fecharModalFora(event)">
 
-    <div class="modal-content" role="dialog" aria-modal="true">
-      <button class="modal-close-x" type="button"
-        aria-label="Fechar" onclick="fecharModal()">&times;</button>
+    <div class="modal">
+      <h2>Código Pix copiado</h2>
 
-      <div class="modal-icon">✓</div>
-      <div class="modal-title" id="modalTitulo">
-        Código Pix Copiado!
-      </div>
+      <p>
+        Se o aplicativo bancário não abriu automaticamente, abra-o
+        manualmente e escolha a opção Pix Copia e Cola.
+        Cole o código copiado e confira os dados antes de pagar.
+      </p>
 
-      <div class="modal-text" id="modalTexto">
-        O código Pix foi copiado para a memória do seu celular.
-        Abra o aplicativo do seu banco e escolha a opção
-        <strong>Pix Copia e Cola</strong> para pagar.
-      </div>
+      <button
+        class="btn-ok"
+        type="button"
+        onclick="fecharModal()">
+        Entendi
+      </button>
 
-      <button class="btn-close-modal" type="button"
-        onclick="fecharModal()">Entendido</button>
+      <button
+        class="btn-fechar"
+        type="button"
+        onclick="fecharModal()">
+        Fechar
+      </button>
     </div>
   </div>
 
@@ -305,131 +296,106 @@
       "00020126580014br.gov.bcb.pix0136d4f08689-848c-4bd7-bbbc-bd364fc59cc427600016BR.COM.PAGSEGURO01368FD85AD6-2954-40F4-8AEE-D823EF21A4895204753853039865802BR5922DIMAS GALDINO DA SILVA6015Sao Jose do Ser62290525PAGS0000000002610100651776304106A";
 
     async function copiarCodigo() {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(pixPayload);
-        return;
-      }
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(pixPayload);
+          return true;
+        }
 
-      const textarea = document.createElement("textarea");
-      textarea.value = pixPayload;
-      textarea.style.position = "fixed";
-      textarea.style.opacity = "0";
+        const textarea = document.createElement("textarea");
 
-      document.body.appendChild(textarea);
-      textarea.select();
+        textarea.value = pixPayload;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        textarea.style.left = "-9999px";
 
-      const sucesso = document.execCommand("copy");
-      document.body.removeChild(textarea);
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
 
-      if (!sucesso) {
-        throw new Error("Não foi possível copiar o código Pix.");
+        const copiado = document.execCommand("copy");
+
+        document.body.removeChild(textarea);
+
+        if (!copiado) {
+          throw new Error("Não foi possível copiar o código Pix.");
+        }
+
+        return true;
+      } catch (erro) {
+        console.error("Erro ao copiar Pix:", erro);
+        return false;
       }
     }
 
-    function abrirModal(titulo, texto) {
-      if (titulo) {
-        document.getElementById("modalTitulo").textContent = titulo;
-      }
-
-      if (texto) {
-        document.getElementById("modalTexto").textContent = texto;
-      }
-
-      document.getElementById("modalInstrucoes")
-        .classList.add("active");
+    function abrirModal() {
+      document.getElementById("modalPix").style.display = "flex";
     }
 
     function fecharModal() {
-      document.getElementById("modalInstrucoes")
-        .classList.remove("active");
+      document.getElementById("modalPix").style.display = "none";
     }
 
     function fecharModalFora(event) {
-      if (event.target.id === "modalInstrucoes") {
+      if (event.target.id === "modalPix") {
         fecharModal();
       }
     }
 
     async function abrirOpcao(tipo) {
-      /*
-       * Mantém a cópia do código Pix antes da abertura.
-       */
-      try {
-        await copiarCodigo();
-      } catch (erro) {
-        console.error("Erro ao copiar o Pix:", erro);
-      }
+      await copiarCodigo();
 
       if (navigator.vibrate) {
         navigator.vibrate(80);
       }
 
       if (tipo === "copiar") {
-        abrirModal(
-          "Código Pix Copiado!",
-          "Abra o aplicativo do seu banco, escolha Pix Copia e Cola " +
-          "e confira os dados do destinatário antes de confirmar."
-        );
+        abrirModal();
         return;
       }
 
       /*
-       * PAGBANK:
-       * Mantido exatamente o endereço original informado.
+       * MUDANÇAS PONTUAIS:
+       * Itaú: usa itau://, conforme o comportamento que você relatou.
+       * Banco do Brasil: tenta bancodobrasil://.
+       * Carteira Google: abre a página oficial do app na Play Store.
+       * PagSeguro: mantém o endereço original, sem alterações.
        */
-      if (tipo === "pagbank") {
-        window.location.href =
-          "https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download";
-        return;
-      }
 
-      /*
-       * CARTEIRA DO GOOGLE:
-       * Abre a página oficial do aplicativo na Play Store.
-       */
       if (tipo === "wallet") {
         window.location.href =
           "https://play.google.com/store/apps/details?id=com.google.android.apps.walletnfcrel";
+
         return;
       }
 
-      /*
-       * BANCO DO BRASIL:
-       * Restaura o esquema do código original.
-       */
+      if (tipo === "pagbank") {
+        window.location.href =
+          "https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download";
+
+        return;
+      }
+
       if (tipo === "bb") {
         window.location.href = "bancodobrasil://";
 
-        setTimeout(function() {
+        setTimeout(function () {
           if (!document.hidden) {
-            abrirModal(
-              "Banco do Brasil",
-              "Se o aplicativo não abriu, utilize o código Pix copiado. " +
-              "Abra o Banco do Brasil, selecione Pix e depois Pix Copia e Cola."
-            );
+            abrirModal();
           }
-        }, 1000);
+        }, 1200);
 
         return;
       }
 
-      /*
-       * ITAÚ:
-       * Restaura o esquema que estava associado ao botão
-       * Carteira do Google na versão original.
-       */
       if (tipo === "itau") {
         window.location.href = "itau://";
 
-        setTimeout(function() {
+        setTimeout(function () {
           if (!document.hidden) {
-            abrirModal(
-              "Banco Itaú",
-              "Se o aplicativo não abriu, utilize o código Pix copiado. " +
-              "Abra o Itaú, selecione Pix e depois Pix Copia e Cola."
-            );
+            abrirModal();
           }
-        }, 1000);
+        }, 1200);
 
         return;
       }
