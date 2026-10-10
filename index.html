@@ -232,17 +232,21 @@
     const pixPayload = "00020126580014br.gov.bcb.pix0136d4f08689-848c-4bd7-bbbc-bd364fc59cc427600016BR.COM.PAGSEGURO01368FD85AD6-2954-40F4-8AEE-D823EF21A4895204753853039865802BR5922DIMAS GALDINO DA SILVA6015Sao Jose do Ser62290525PAGS0000000002610100651776304106A";
 
     async function copiarCodigo() {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(pixPayload);
-      } else {
-        const textarea = document.createElement("textarea");
-        textarea.value = pixPayload;
-        textarea.style.position = "fixed";
-        textarea.style.opacity = "0";
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textarea);
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(pixPayload);
+        } else {
+          const textarea = document.createElement("textarea");
+          textarea.value = pixPayload;
+          textarea.style.position = "fixed";
+          textarea.style.opacity = "0";
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand("copy");
+          document.body.removeChild(textarea);
+        }
+      } catch (err) {
+        console.warn("Não foi possível copiar automaticamente:", err);
       }
     }
 
@@ -259,46 +263,75 @@
     }
 
     async function abrirOpcao(tipo) {
-      // 1. Sempre copia o código Pix instantaneamente
+      // 1. Copia o código Pix instantaneamente
       await copiarCodigo();
 
       if (navigator.vibrate) {
         navigator.vibrate(80);
       }
 
+      // 2. Botão "Apenas Copiar Código"
       if (tipo === 'copiar') {
         abrirModal();
         return;
       }
 
       const isAndroid = /Android/i.test(navigator.userAgent);
+      const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+      // 3. PagBank (mantido - já funcionava)
+      if (tipo === 'pagbank') {
+        window.location.href = "https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download";
+        return;
+      }
+
+      // 4. Define o pacote Android / scheme iOS para cada app
+      let androidPackage = '';
+      let iosScheme = '';
+
+      switch (tipo) {
+        case 'wallet':
+          androidPackage = 'com.google.android.apps.walletnfcrel';
+          iosScheme = 'googlewallet://';
+          break;
+        case 'bb':
+          androidPackage = 'br.com.bb.android';
+          iosScheme = 'bancodobrasil://';
+          break;
+        case 'itau':
+          androidPackage = 'com.itau';
+          iosScheme = 'itau://';
+          break;
+      }
+
+      let tentouAbrir = false;
+
+      // 5. Abre o app específico
+      if (isAndroid && androidPackage) {
+        const intentUrl =
+          'intent://#Intent;' +
+          'package=' + androidPackage + ';' +
+          'action=android.intent.action.MAIN;' +
+          'category=android.intent.category.LAUNCHER;' +
+          'end';
+        window.location.href = intentUrl;
+        tentouAbrir = true;
+      } else if (isIOS && iosScheme) {
+        window.location.href = iosScheme;
+        tentouAbrir = true;
+      }
+
+      // 6. Fallback: se não for Android nem iOS, ou o app não abrir em 1,5s, mostra o modal
+      if (!tentouAbrir) {
+        abrirModal();
+        return;
+      }
 
       setTimeout(() => {
-        if (tipo === 'wallet') {
-          if (isAndroid) {
-            // Dispara a Intent de visualização Pix sem forçar o pacote para não enviar para o Itaú nem para a Play Store
-            window.location.href = "intent://#Intent;action=android.intent.action.VIEW;type=text/plain;S.android.intent.extra.TEXT=" + encodeURIComponent(pixPayload) + ";end";
-          } else {
-            abrirModal();
-          }
-        } else if (tipo === 'pagbank') {
-          window.location.href = "https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download";
-        } else if (tipo === 'bb') {
-          // Tenta acionar o esquema direto do Banco do Brasil
-          window.location.href = "bancodobrasil://";
-          // Se o app não estiver instalado ou não responder, abre o modal em 1 segundo em vez de ir para a Play Store
-          setTimeout(() => {
-            if (!document.hidden) abrirModal();
-          }, 1000);
-        } else if (tipo === 'itau') {
-          // Tenta acionar o esquema direto do Itaú
-          window.location.href = "itau://";
-          // Se o app não responder, exibe o modal amigável com a cópia confirmada
-          setTimeout(() => {
-            if (!document.hidden) abrirModal();
-          }, 1000);
+        if (!document.hidden) {
+          abrirModal();
         }
-      }, 200);
+      }, 1500);
     }
   </script>
 
