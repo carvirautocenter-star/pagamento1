@@ -85,34 +85,6 @@
       background: #0052cc; 
     }
 
-    /* Modal se houver múltiplas opções diretas */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex; align-items: flex-end; justify-content: center;
-      opacity: 0; visibility: hidden; transition: all 0.3s ease; z-index: 1000;
-    }
-    .modal-overlay.active { opacity: 1; visibility: visible; }
-    .modal-content {
-      background: #ffffff; width: 100%; max-width: 420px;
-      border-top-left-radius: 24px; border-top-right-radius: 24px;
-      padding: 24px 20px 32px 20px; transform: translateY(100%);
-      transition: transform 0.3s ease;
-    }
-    .modal-overlay.active .modal-content { transform: translateY(0); }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .modal-header h3 { font-size: 16px; color: #1a1a1a; font-weight: 700; }
-    .close-btn { background: #f0f2f5; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; font-weight: bold; color: #666; cursor: pointer; }
-
-    .direct-grid { display: flex; flex-direction: column; gap: 10px; }
-    .btn-direct {
-      background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 12px;
-      padding: 14px; font-size: 14px; font-weight: 600; color: #333; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .btn-direct:active { background: #e2e8f0; transform: scale(0.97); }
-
     /* Card de Instruções/Feedback */
     .status-box { 
       margin-top: 18px; 
@@ -126,7 +98,12 @@
       text-align: left;
       line-height: 1.5;
     }
-    .status-box p { margin-top: 4px; font-weight: 400; color: #1b5e20; font-size: 12px; }
+    .status-box p { 
+      margin-top: 4px; 
+      font-weight: 400; 
+      color: #1b5e20; 
+      font-size: 12px; 
+    }
   </style>
 </head>
 <body>
@@ -142,34 +119,14 @@
     </button>
 
     <div id="statusBox" class="status-box">
-      <div>✓ Código Pix copiado para a memória!</div>
-      <p>Abra o aplicativo do seu banco (Mercado Pago, Nubank, Itaú, etc.) e selecione a opção <strong>Pix Copia e Cola</strong> para concluir.</p>
-    </div>
-  </div>
-
-  <!-- Modal caso haja mais de um app direto configurado -->
-  <div class="modal-overlay" id="modalOverlay" onclick="fecharModalFora(event)">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Escolha seu banco direto</h3>
-        <button class="close-btn" onclick="fecharModal()">&times;</button>
-      </div>
-
-      <div class="direct-grid" id="directOptionsGrid">
-        <!-- Inserido via JS se necessário -->
-      </div>
+      <div>✓ Código Pix copiado com sucesso!</div>
+      <p>Caso seu aplicativo de banco não abra automaticamente, abra o app do seu banco e selecione a opção <strong>Pix Copia e Cola</strong>.</p>
     </div>
   </div>
 
   <script>
+    // Payload Pix Padrão
     const pixPayload = "00020126580014br.gov.bcb.pix0136d4f08689-848c-4bd7-bbbc-bd364fc59cc427600016BR.COM.PAGSEGURO01368FD85AD6-2954-40F4-8AEE-D823EF21A4895204753853039865802BR5922DIMAS GALDINO DA SILVA6015Sao Jose do Ser62290525PAGS0000000002610100651776304106A";
-
-    // Bancos que possuem redirecionamento direto validado
-    const directBanks = [
-      { id: 'pagbank', name: '💚 PagBank', url: 'https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download' },
-      { id: 'bb', name: '🟡 Banco do Brasil', url: 'bancodobrasil://' },
-      { id: 'itau', name: '🟧 Itaú', url: 'itau://' }
-    ];
 
     async function copiarCodigo() {
       if (navigator.clipboard && window.isSecureContext) {
@@ -186,60 +143,26 @@
       }
     }
 
-    function abrirModal() {
-      document.getElementById('modalOverlay').classList.add('active');
-    }
-
-    function fecharModal() {
-      document.getElementById('modalOverlay').classList.remove('active');
-    }
-
-    function fecharModalFora(e) {
-      if (e.target.id === 'modalOverlay') fecharModal();
-    }
-
-    function direcionarParaBanco(url) {
-      fecharModal();
-      document.getElementById('statusBox').style.display = 'block';
-      setTimeout(() => {
-        window.location.href = url;
-      }, 300);
-    }
-
     async function processarPagamento() {
-      // 1. Sempre copia o Pix instantaneamente no clique
+      // 1. Garante que o código Pix seja copiado para a área de transferência
       await copiarCodigo();
 
-      // Exibe a mensagem de cópia com sucesso
+      // Exibe a mensagem de confirmação
       document.getElementById('statusBox').style.display = 'block';
 
-      // 2. Verifica as opções de direcionamento direto
-      // Exemplo: Se for um ambiente comum com 1 opção direta (ex: PagBank)
-      if (directBanks.length === 1) {
-        // Redireciona direto sem exibir pop-up
-        direcionarParaBanco(directBanks[0].url);
-      } else if (directBanks.length > 1) {
-        // Se houver múltiplas opções diretas ativas no sistema, gera os botões e abre o pop-up
-        const grid = document.getElementById('directOptionsGrid');
-        grid.innerHTML = '';
-        
-        directBanks.forEach(banco => {
-          const btn = document.createElement('button');
-          btn.className = 'btn-direct';
-          btn.innerText = banco.name;
-          btn.onclick = () => direcionarParaBanco(banco.url);
-          grid.appendChild(btn);
-        });
+      // Feedback tátil (vibração), se disponível
+      if (navigator.vibrate) {
+        navigator.vibrate(80);
+      }
 
-        // Adiciona opção genérica no modal
-        const btnOutro = document.createElement('button');
-        btnOutro.className = 'btn-direct';
-        btnOutro.style.background = '#e2e8f0';
-        btnOutro.innerText = '📋 Apenas Copiar para Outro Banco';
-        btnOutro.onclick = () => fecharModal();
-        grid.appendChild(btnOutro);
+      // 2. Tenta acionar a gaveta nativa do Android (Carteira do Google / Seletor do Sistema)
+      const isAndroid = /Android/i.test(navigator.userAgent);
 
-        abrirModal();
+      if (isAndroid) {
+        setTimeout(() => {
+          // Intent genérica do Android para solicitar abertura do seletor/carteira com o payload do Pix
+          window.location.href = "intent://#Intent;action=android.intent.action.VIEW;type=text/plain;S.android.intent.extra.TEXT=" + encodeURIComponent(pixPayload) + ";end";
+        }, 300);
       }
     }
   </script>
