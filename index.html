@@ -26,7 +26,7 @@
     }
 
     .card {
-      background: #ffffff;
+      background: #fff;
       border-radius: 24px;
       padding: 28px 20px;
       max-width: 390px;
@@ -68,7 +68,7 @@
       overflow-wrap: anywhere;
     }
 
-    p.subtitle {
+    .subtitle {
       color: #666;
       font-size: 13px;
       line-height: 1.4;
@@ -82,7 +82,7 @@
     }
 
     .btn-option {
-      background: #ffffff;
+      background: #fff;
       border: 1px solid #e2e8f0;
       border-radius: 14px;
       padding: 12px 16px;
@@ -95,7 +95,7 @@
       align-items: center;
       justify-content: flex-start;
       gap: 14px;
-      transition: background 0.2s ease, transform 0.2s ease;
+      transition: all 0.2s ease;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
       width: 100%;
       text-align: left;
@@ -105,11 +105,6 @@
     .btn-option:active {
       transform: scale(0.98);
       background: #f8fafc;
-    }
-
-    .btn-option:focus-visible {
-      outline: 3px solid #80b3ff;
-      outline-offset: 2px;
     }
 
     .btn-icon-img {
@@ -122,7 +117,7 @@
 
     .btn-copy-only {
       background: #0066ff;
-      color: #ffffff;
+      color: #fff;
       border: none;
       font-weight: 700;
       margin-top: 6px;
@@ -147,7 +142,7 @@
       justify-content: center;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
+      transition: all 0.3s ease;
       z-index: 1000;
       padding-top: 20px;
     }
@@ -159,11 +154,10 @@
 
     .modal-content {
       position: relative;
-      background: #ffffff;
+      background: #fff;
       width: 100%;
       max-width: 420px;
-      border-top-left-radius: 24px;
-      border-top-right-radius: 24px;
+      border-radius: 24px 24px 0 0;
       padding: 28px 22px 36px;
       transform: translateY(100%);
       transition: transform 0.3s ease;
@@ -189,9 +183,6 @@
       font-weight: bold;
       color: #666;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .modal-icon {
@@ -230,7 +221,7 @@
       width: 100%;
       font-size: 14px;
       font-weight: 700;
-      color: #ffffff;
+      color: #fff;
       cursor: pointer;
     }
 
@@ -259,7 +250,7 @@
 
     <div class="options-grid">
 
-      <!-- 1. BANCO ITAÚ: esquema original itau:// -->
+      <!-- BANCO ITAÚ -->
       <button
         type="button"
         class="btn-option"
@@ -268,12 +259,12 @@
         <img
           class="btn-icon-img"
           src="https://upload.wikimedia.org/wikipedia/commons/2/2d/2023_Ita%C3%BA_Unibanco_Logo.png"
-          alt="Itaú"
+          alt="Banco Itaú"
         >
         <span>Banco Itaú</span>
       </button>
 
-      <!-- 2. PAGBANK: endereço original preservado -->
+      <!-- PAGBANK: ENDEREÇO ORIGINAL PRESERVADO -->
       <button
         type="button"
         class="btn-option"
@@ -287,7 +278,7 @@
         <span>PagBank (PagSeguro)</span>
       </button>
 
-      <!-- 3. BANCO DO BRASIL: tentativa de abertura direta -->
+      <!-- BANCO DO BRASIL -->
       <button
         type="button"
         class="btn-option"
@@ -301,7 +292,7 @@
         <span>Banco do Brasil</span>
       </button>
 
-      <!-- 4. CARTEIRA GOOGLE: pacote Android da Wallet -->
+      <!-- CARTEIRA DO GOOGLE -->
       <button
         type="button"
         class="btn-option"
@@ -315,7 +306,7 @@
         <span>Carteira do Google</span>
       </button>
 
-      <!-- 5. COPIAR PIX -->
+      <!-- COPIAR CÓDIGO PIX -->
       <button
         type="button"
         class="btn-option btn-copy-only"
@@ -361,8 +352,8 @@
       <div class="modal-text">
         O código Pix já está na memória do seu celular.
         <br><br>
-        Agora, abra o aplicativo do seu banco e escolha
-        a opção <strong>Pix Copia e Cola</strong> para pagar.
+        Abra o aplicativo do banco e escolha a opção
+        <strong>Pix Copia e Cola</strong> para pagar.
       </div>
 
       <button
@@ -376,9 +367,10 @@
   </div>
 
   <script>
-    // CÓDIGO PIX ORIGINAL PRESERVADO
+    // CÓDIGO PIX ORIGINAL
     const pixPayload =
       "00020126580014br.gov.bcb.pix0136d4f08689-848c-4bd7-bbbc-bd364fc59cc427600016BR.COM.PAGSEGURO01368FD85AD6-2954-40F4-8AEE-D823EF21A4895204753853039865802BR5922DIMAS GALDINO DA SILVA6015Sao Jose do Ser62290525PAGS0000000002610100651776304106A";
+
 
     // COPIAR CÓDIGO PIX
     async function copiarCodigo() {
@@ -390,6 +382,7 @@
       const textarea = document.createElement("textarea");
 
       textarea.value = pixPayload;
+      textarea.setAttribute("readonly", "");
       textarea.style.position = "fixed";
       textarea.style.left = "-9999px";
       textarea.style.top = "0";
@@ -407,7 +400,8 @@
       }
     }
 
-    // ABRIR MODAL
+
+    // MODAL
     function abrirModal() {
       const modal = document.getElementById("modalInstrucoes");
 
@@ -415,7 +409,6 @@
       modal.setAttribute("aria-hidden", "false");
     }
 
-    // FECHAR MODAL
     function fecharModal() {
       const modal = document.getElementById("modalInstrucoes");
 
@@ -423,28 +416,27 @@
       modal.setAttribute("aria-hidden", "true");
     }
 
-    // FECHAR AO TOCAR FORA
     function fecharModalFora(event) {
       if (event.target.id === "modalInstrucoes") {
         fecharModal();
       }
     }
 
-    // ABERTURA DOS APLICATIVOS
+
+    // ABRIR A OPÇÃO ESCOLHIDA
     async function abrirOpcao(tipo) {
 
-      // Preserva a tentativa de copiar o Pix antes de abrir o banco.
+      // Preserva a cópia do Pix antes de tentar abrir o aplicativo.
       try {
         await copiarCodigo();
       } catch (erro) {
-        console.error("Erro ao copiar Pix:", erro);
+        console.error("Erro ao copiar código Pix:", erro);
       }
 
       if (navigator.vibrate) {
         navigator.vibrate(80);
       }
 
-      // Apenas copiar: mostra as instruções.
       if (tipo === "copiar") {
         abrirModal();
         return;
@@ -457,10 +449,21 @@
         return;
       }
 
+
       // ITAÚ
-      // Preserva exatamente o esquema original.
+      // Monta a Intent dinamicamente com o payload Pix.
+      // Usa o formato informado pelo usuário.
       if (tipo === "itau") {
-        window.location.href = "itau://";
+
+        const intentItau =
+          "intent://#Intent;" +
+          "action=android.intent.action.VIEW;" +
+          "type=text/plain;" +
+          "S.android.intent.extra.TEXT=" +
+          encodeURIComponent(pixPayload) +
+          ";end";
+
+        window.location.href = intentItau;
 
         setTimeout(() => {
           if (!document.hidden) {
@@ -471,20 +474,30 @@
         return;
       }
 
+
       // PAGBANK / PAGSEGURO
-      // Preserva exatamente o endereço original da aplicação.
+      // Mantém o endereço original, sem modificações.
       if (tipo === "pagbank") {
+
         window.location.href =
           "https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download";
 
         return;
       }
 
+
       // BANCO DO BRASIL
-      // Tenta iniciar o app instalado pelo pacote Android.
+      // Tenta iniciar o aplicativo instalado diretamente.
       if (tipo === "bb") {
-        window.location.href =
-          "intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=br.com.bb.android;end";
+
+        const intentBB =
+          "intent://#Intent;" +
+          "action=android.intent.action.MAIN;" +
+          "category=android.intent.category.LAUNCHER;" +
+          "package=br.com.bb.android;" +
+          "end";
+
+        window.location.href = intentBB;
 
         setTimeout(() => {
           if (!document.hidden) {
@@ -495,21 +508,32 @@
         return;
       }
 
+
       // CARTEIRA DO GOOGLE
-      // Tenta iniciar a Wallet instalada no Android.
+      // Tenta iniciar a Wallet instalada diretamente.
       if (tipo === "wallet") {
-        window.location.href =
-          "intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.google.android.apps.walletnfcrel;end";
+
+        const intentWallet =
+          "intent://#Intent;" +
+          "action=android.intent.action.MAIN;" +
+          "category=android.intent.category.LAUNCHER;" +
+          "package=com.google.android.apps.walletnfcrel;" +
+          "end";
+
+        window.location.href = intentWallet;
 
         setTimeout(() => {
           if (!document.hidden) {
             abrirModal();
           }
         }, 1500);
+
+        return;
       }
     }
 
-    // FECHAR MODAL COM A TECLA ESC
+
+    // FECHAR MODAL COM ESC
     document.addEventListener("keydown", function(event) {
       if (event.key === "Escape") {
         fecharModal();
