@@ -3,50 +3,159 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pagamento via Pix - Dimas Galdino da Silva</title>
+  <title>Pagamento via Pix</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-    body { background-color: #f0f2f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px 12px; }
-    .card { background: #ffffff; border-radius: 20px; padding: 24px 18px; max-width: 400px; width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.06); text-align: center; }
-    .badge { background: #e8f5e9; color: #2e7d32; font-weight: 700; font-size: 11px; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 12px; text-transform: uppercase; }
-    h2 { color: #1a1a1a; font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-    p.subtitle { color: #666; font-size: 13px; margin-bottom: 20px; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+    }
+    body { 
+      background-color: #f0f2f5; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      min-height: 100vh; 
+      padding: 20px 12px; 
+    }
+    .card { 
+      background: #ffffff; 
+      border-radius: 20px; 
+      padding: 24px 18px; 
+      max-width: 400px; 
+      width: 100%; 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06); 
+      text-align: center; 
+    }
+    .badge { 
+      background: #e8f5e9; 
+      color: #2e7d32; 
+      font-weight: 700; 
+      font-size: 11px; 
+      padding: 4px 12px; 
+      border-radius: 20px; 
+      display: inline-block; 
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    h2 { 
+      color: #1a1a1a; 
+      font-size: 18px; 
+      font-weight: 700;
+      margin-bottom: 4px; 
+    }
+    p.subtitle { 
+      color: #666; 
+      font-size: 13px; 
+      margin-bottom: 20px; 
+    }
     
-    .btn-main { background: #00b140; color: #ffffff; font-size: 16px; font-weight: 700; border: none; border-radius: 14px; padding: 16px; width: 100%; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0, 177, 64, 0.3); }
-    .btn-main:active { transform: scale(0.98); background: #008f33; }
+    /* Botão Principal em Destaque */
+    .btn-main { 
+      background: #00b140; 
+      color: #ffffff; 
+      font-size: 16px; 
+      font-weight: 700; 
+      border: none; 
+      border-radius: 14px; 
+      padding: 16px; 
+      width: 100%; 
+      cursor: pointer; 
+      transition: all 0.2s ease; 
+      box-shadow: 0 4px 12px rgba(0, 177, 64, 0.3);
+      margin-bottom: 12px;
+    }
+    .btn-main:active { 
+      transform: scale(0.98);
+      background: #008f33; 
+    }
 
-    .divider { margin: 20px 0 16px 0; display: flex; align-items: center; color: #888; font-size: 12px; font-weight: 600; text-transform: uppercase; }
-    .divider::before, .divider::after { content: ""; flex: 1; border-bottom: 1px solid #e0e0e0; }
-    .divider span { padding: 0 10px; }
+    .divider {
+      margin: 16px 0;
+      display: flex;
+      align-items: center;
+      color: #888;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .divider::before, .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .divider span {
+      padding: 0 10px;
+    }
 
-    .banks-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .btn-bank { background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 600; color: #333; cursor: pointer; }
-    .btn-bank:active { background: #e2e8f0; transform: scale(0.97); }
+    /* Grid de Outros Bancos */
+    .banks-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
 
-    .status-msg { margin-top: 16px; padding: 12px; background: #e8f5e9; border-radius: 10px; font-size: 13px; color: #2e7d32; font-weight: 600; display: none; }
+    .btn-bank {
+      background: #f8f9fa;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-bank:active {
+      background: #e2e8f0;
+      transform: scale(0.97);
+    }
+
+    .status-msg { 
+      margin-top: 16px; 
+      padding: 12px;
+      background: #e8f5e9;
+      border-radius: 10px;
+      font-size: 13px; 
+      color: #2e7d32; 
+      font-weight: 600; 
+      display: none; 
+    }
   </style>
 </head>
 <body>
 
   <div class="card">
     <span class="badge">● Recebedor Pix</span>
-    <h2>DIMAS GALDINO DA SILVA</h2>
-    <p class="subtitle">Toque no botão do seu banco para copiar a chave Pix e tentar abrir o aplicativo.</p>
+    <h2 id="nome-loja">DIMAS GALDINO DA SILVA</h2>
+    <p class="subtitle">Toque no botão do seu banco para copiar o Pix e abrir o aplicativo.</p>
 
-    <!-- Botão Principal PagBank -->
+    <!-- Botão Principal Destaque PagBank -->
     <button class="btn-main" onclick="abrirBanco('pagbank')">
       Pagar com PagBank
     </button>
 
     <div class="divider">
-      <span>ou escolha seu banco</span>
+      <span>ou abra seu banco</span>
     </div>
 
-    <!-- Outros Bancos -->
+    <!-- Lista com Principais Bancos do Brasil -->
     <div class="banks-grid">
       <button class="btn-bank" onclick="abrirBanco('nubank')">💜 Nubank</button>
       <button class="btn-bank" onclick="abrirBanco('itau')">🟧 Itaú</button>
+      <button class="btn-bank" onclick="abrirBanco('bradesco')">🟥 Bradesco</button>
       <button class="btn-bank" onclick="abrirBanco('mercadopago')">🟦 Mercado Pago</button>
+      <button class="btn-bank" onclick="abrirBanco('bb')">🟡 Banco do Brasil</button>
+      <button class="btn-bank" onclick="abrirBanco('inter')">🟠 Inter</button>
+      <button class="btn-bank" onclick="abrirBanco('caixa')">🔵 Caixa</button>
+      <button class="btn-bank" onclick="abrirBanco('santander')">🔴 Santander</button>
+      <button class="btn-bank" onclick="abrirBanco('c6')">⚫ C6 Bank</button>
       <button class="btn-bank" onclick="abrirBanco('outro')">📋 Apenas Copiar</button>
     </div>
 
@@ -56,7 +165,22 @@
   </div>
 
   <script>
-    const pixPayload = "00020126580014br.gov.bcb.pix0136d4f08689-848c-4bd7-bbbc-bd364fc59cc427600016BR.COM.PAGSEGURO01368FD85AD6-2954-40F4-8AEE-D823EF21A4895204753853039865802BR5922DIMAS GALDINO DA SILVA6015Sao Jose do Ser62290525PAGS0000000002610100651776304106A";
+    // Payload Pix Padrão
+    let pixPayload = "00020126580014br.gov.bcb.pix0136d4f08689-848c-4bd7-bbbc-bd364fc59cc427600016BR.COM.PAGSEGURO01368FD85AD6-2954-40F4-8AEE-D823EF21A4895204753853039865802BR5922DIMAS GALDINO DA SILVA6015Sao Jose do Ser62290525PAGS0000000002610100651776304106A";
+
+    // Mapeamento de Deep Links / Schemas Universais dos Bancos
+    const bankLinks = {
+      pagbank: "https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download",
+      nubank: "nubank://",
+      itau: "itau://",
+      bradesco: "bradesco://",
+      mercadopago: "mercadopago://",
+      bb: "bancodobrasil://",
+      inter: "bancointer://",
+      caixa: "caixa://",
+      santander: "santander://",
+      c6: "c6bank://"
+    };
 
     async function copiarCodigo() {
       if (navigator.clipboard && window.isSecureContext) {
@@ -84,22 +208,18 @@
         return;
       }
 
-      statusEl.innerText = "✓ Código copiado! Tentando abrir o aplicativo...";
+      statusEl.innerText = "✓ Código copiado! Abrindo o aplicativo...";
       statusEl.style.display = 'block';
 
-      // Dispara os Schemas diretamente sem passar pelo intent:// da Play Store
+      // Executa a chamada do App em 300ms para garantir a cópia do texto
       setTimeout(() => {
-        if (bancoKey === 'pagbank') {
-          // Tenta acionar o universal link oficial do PagBank
-          window.location.href = "https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download";
-        } else if (bancoKey === 'nubank') {
-          window.location.href = "nubank://";
-        } else if (bancoKey === 'itau') {
-          window.location.href = "itau://";
-        } else if (bancoKey === 'mercadopago') {
-          window.location.href = "mercadopago://";
+        const link = bankLinks[bancoKey];
+        if (link) {
+          window.location.href = link;
+        } else {
+          statusEl.innerText = "✓ Código Pix copiado! Abra o app do seu banco.";
         }
-      }, 400);
+      }, 300);
     }
   </script>
 
