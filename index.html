@@ -42,31 +42,26 @@
     <p class="subtitle">Escolha o seu aplicativo para pagar ou copie o código Pix.</p>
 
     <div class="options-grid">
-      <!-- 1. Carteira Google -->
       <button class="btn-option" onclick="abrirOpcao('wallet')">
         <img class="btn-icon-img" src="https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Google_Wallet_icon.svg/3840px-Google_Wallet_icon.svg.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=thumbnail" alt="Google Wallet">
         <span>Carteira do Google</span>
       </button>
 
-      <!-- 2. PagBank / PagSeguro -->
       <button class="btn-option" onclick="abrirOpcao('pagbank')">
         <img class="btn-icon-img" src="https://ribnet.com.br/wp-content/uploads/2024/04/pagbank.png" alt="PagBank">
         <span>PagBank (PagSeguro)</span>
       </button>
 
-      <!-- 3. Banco do Brasil -->
       <button class="btn-option" onclick="abrirOpcao('bb')">
         <img class="btn-icon-img" src="https://assets.hgbrasil.com/finance/companies/big/banco-do-brasil.png" alt="Banco do Brasil">
         <span>Banco do Brasil</span>
       </button>
 
-      <!-- 4. Itaú -->
       <button class="btn-option" onclick="abrirOpcao('itau')">
         <img class="btn-icon-img" src="https://upload.wikimedia.org/wikipedia/commons/2/2d/2023_Ita%C3%BA_Unibanco_Logo.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=original" alt="Itaú">
         <span>Banco Itaú</span>
       </button>
 
-      <!-- 5. Apenas Copiar Código -->
       <button class="btn-option btn-copy-only" onclick="abrirOpcao('copiar')">
         <img class="btn-icon-img" src="https://cdn-icons-png.flaticon.com/512/84/84185.png" alt="Copiar">
         <span>Apenas Copiar Código Pix</span>
@@ -74,7 +69,6 @@
     </div>
   </div>
 
-  <!-- Modal de Instruções -->
   <div class="modal-overlay" id="modalInstrucoes" onclick="fecharModalFora(event)">
     <div class="modal-content">
       <button class="modal-close-x" onclick="fecharModal()">&times;</button>
@@ -91,22 +85,25 @@
   <script>
     const pixPayload = "00020126580014br.gov.bcb.pix0136d4f08689-848c-4bd7-bbbc-bd364fc59cc427600016BR.COM.PAGSEGURO01368FD85AD6-2954-40F4-8AEE-D823EF21A4895204753853039865802BR5922DIMAS GALDINO DA SILVA6015Sao Jose do Ser62290525PAGS0000000002610100651776304106A";
 
-    async function copiarCodigo() {
+    // Cópia SÍNCRONA — preserva o gesto do usuário
+    function copiarCodigoSync() {
       try {
+        // Tenta a API moderna primeiro
         if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(pixPayload);
+          navigator.clipboard.writeText(pixPayload);
         } else {
-          const textarea = document.createElement("textarea");
-          textarea.value = pixPayload;
-          textarea.style.position = "fixed";
-          textarea.style.opacity = "0";
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand("copy");
-          document.body.removeChild(textarea);
+          throw new Error('Clipboard API indisponível');
         }
       } catch (err) {
-        console.warn("Não foi possível copiar automaticamente:", err);
+        // Fallback síncrono com textarea (funciona em qualquer contexto)
+        const textarea = document.createElement('textarea');
+        textarea.value = pixPayload;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
       }
     }
 
@@ -122,9 +119,10 @@
       if (e.target.id === 'modalInstrucoes') fecharModal();
     }
 
-    async function abrirOpcao(tipo) {
-      // 1. Copia o código Pix instantaneamente
-      await copiarCodigo();
+    // Função NÃO assíncrona — tudo roda no mesmo ciclo do clique
+    function abrirOpcao(tipo) {
+      // 1. Copia imediatamente (síncrono)
+      copiarCodigoSync();
 
       if (navigator.vibrate) {
         navigator.vibrate(80);
@@ -139,7 +137,7 @@
       const isAndroid = /Android/i.test(navigator.userAgent);
       const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-      // 3. PagBank (mantido - já funcionava)
+      // 3. PagBank — mantido (funciona)
       if (tipo === 'pagbank') {
         window.location.href = "https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download";
         return;
@@ -152,31 +150,26 @@
       switch (tipo) {
         case 'wallet':
           if (isAndroid) {
-            // Intent com fallback para evitar abrir a Play Store
-            appUrl = 'intent://#Intent;package=com.google.android.apps.walletnfcrel;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;S.browser_fallback_url=' + encodeURIComponent('https://pagamento1.vercel.app/') + ';end';
+            // Intent com fallback para a própria página (impede Play Store)
+            appUrl = 'intent://#Intent;package=com.google.android.apps.walletnfcrel;' +
+                     'action=android.intent.action.MAIN;' +
+                     'category=android.intent.category.LAUNCHER;' +
+                     'S.browser_fallback_url=' +
+                     encodeURIComponent('https://pagamento1.vercel.app/') +
+                     ';end';
           } else if (isIOS) {
-            appUrl = 'googlewallet://'; // Tenta abrir o app no iOS
+            appUrl = 'googlewallet://';
           } else {
             fallbackNeeded = true;
           }
           break;
         case 'bb':
-          if (isAndroid) {
-            appUrl = 'bancodobrasil://';
-          } else if (isIOS) {
-            appUrl = 'bancodobrasil://';
-          } else {
-            fallbackNeeded = true;
-          }
+          // Esquema personalizado — abre direto sem passar pela loja
+          appUrl = 'bancodobrasil://';
           break;
         case 'itau':
-          if (isAndroid) {
-            appUrl = 'itau://';
-          } else if (isIOS) {
-            appUrl = 'itau://';
-          } else {
-            fallbackNeeded = true;
-          }
+          // Esquema personalizado — abre direto sem passar pela loja
+          appUrl = 'itau://';
           break;
       }
 
@@ -186,10 +179,10 @@
         return;
       }
 
-      // Tenta abrir o app
+      // Dispara a navegação IMEDIATAMENTE (ainda dentro do gesto do usuário)
       window.location.href = appUrl;
 
-      // 6. Fallback: se o app não abrir em 1,5s, mostra o modal
+      // 6. Fallback: se o app não abrir em 1,5 s, mostra o modal
       setTimeout(() => {
         if (!document.hidden) {
           abrirModal();
