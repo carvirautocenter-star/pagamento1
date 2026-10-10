@@ -42,9 +42,7 @@
       margin-bottom: 16px;
     }
 
-    .brand span {
-      color: #0066ff;
-    }
+    .brand span { color: #0066ff; }
 
     .badge {
       background: #e8f5e9;
@@ -122,9 +120,7 @@
       box-shadow: 0 4px 12px rgba(0,102,255,.25);
     }
 
-    .btn-copy-only:active {
-      background: #0052cc;
-    }
+    .btn-copy-only:active { background: #0052cc; }
 
     .btn-copy-only img {
       filter: brightness(0) invert(1);
@@ -155,8 +151,7 @@
       max-width: 420px;
       max-height: 90vh;
       overflow-y: auto;
-      border-top-left-radius: 24px;
-      border-top-right-radius: 24px;
+      border-radius: 24px 24px 0 0;
       padding: 28px 22px 36px;
       transform: translateY(100%);
       transition: transform .3s ease;
@@ -223,18 +218,14 @@
       cursor: pointer;
     }
 
-    .btn-close-modal:active {
-      background: #0052cc;
-    }
+    .btn-close-modal:active { background: #0052cc; }
   </style>
 </head>
 
 <body>
   <main class="card">
     <div class="brand"><span>I-</span>TIQUETA</div>
-
     <span class="badge">● Recebedor Pix</span>
-
     <h2 id="nome-loja">DIMAS GALDINO DA SILVA</h2>
 
     <p class="subtitle">
@@ -243,7 +234,6 @@
 
     <div class="options-grid">
 
-      <!-- Carteira do Google -->
       <button class="btn-option" type="button"
         onclick="abrirOpcao('wallet')">
         <img class="btn-icon-img"
@@ -252,7 +242,6 @@
         <span>Carteira do Google</span>
       </button>
 
-      <!-- PagBank / PagSeguro -->
       <button class="btn-option" type="button"
         onclick="abrirOpcao('pagbank')">
         <img class="btn-icon-img"
@@ -261,7 +250,6 @@
         <span>PagBank (PagSeguro)</span>
       </button>
 
-      <!-- Banco do Brasil -->
       <button class="btn-option" type="button"
         onclick="abrirOpcao('bb')">
         <img class="btn-icon-img"
@@ -270,7 +258,6 @@
         <span>Banco do Brasil</span>
       </button>
 
-      <!-- Itaú -->
       <button class="btn-option" type="button"
         onclick="abrirOpcao('itau')">
         <img class="btn-icon-img"
@@ -279,7 +266,6 @@
         <span>Banco Itaú</span>
       </button>
 
-      <!-- Copiar Pix -->
       <button class="btn-option btn-copy-only" type="button"
         onclick="abrirOpcao('copiar')">
         <img class="btn-icon-img"
@@ -291,27 +277,23 @@
     </div>
   </main>
 
-  <!-- Modal -->
   <div class="modal-overlay" id="modalInstrucoes"
     onclick="fecharModalFora(event)">
 
-    <div class="modal-content" role="dialog"
-      aria-modal="true" aria-labelledby="modalTitulo">
-
+    <div class="modal-content" role="dialog" aria-modal="true">
       <button class="modal-close-x" type="button"
         aria-label="Fechar" onclick="fecharModal()">&times;</button>
 
       <div class="modal-icon">✓</div>
-
-      <h3 class="modal-title" id="modalTitulo">
+      <div class="modal-title" id="modalTitulo">
         Código Pix Copiado!
-      </h3>
+      </div>
 
-      <p class="modal-text" id="modalTexto">
+      <div class="modal-text" id="modalTexto">
         O código Pix foi copiado para a memória do seu celular.
-        Abra o aplicativo do banco, escolha Pix e depois Pix Copia
-        e Cola. Confira os dados antes de confirmar o pagamento.
-      </p>
+        Abra o aplicativo do seu banco e escolha a opção
+        <strong>Pix Copia e Cola</strong> para pagar.
+      </div>
 
       <button class="btn-close-modal" type="button"
         onclick="fecharModal()">Entendido</button>
@@ -334,7 +316,6 @@
       textarea.style.opacity = "0";
 
       document.body.appendChild(textarea);
-      textarea.focus();
       textarea.select();
 
       const sucesso = document.execCommand("copy");
@@ -345,7 +326,15 @@
       }
     }
 
-    function abrirModal() {
+    function abrirModal(titulo, texto) {
+      if (titulo) {
+        document.getElementById("modalTitulo").textContent = titulo;
+      }
+
+      if (texto) {
+        document.getElementById("modalTexto").textContent = texto;
+      }
+
       document.getElementById("modalInstrucoes")
         .classList.add("active");
     }
@@ -363,13 +352,12 @@
 
     async function abrirOpcao(tipo) {
       /*
-       * Copia o Pix antes de executar a ação do botão,
-       * mantendo o comportamento da versão original.
+       * Mantém a cópia do código Pix antes da abertura.
        */
       try {
         await copiarCodigo();
       } catch (erro) {
-        console.error("Erro ao copiar Pix:", erro);
+        console.error("Erro ao copiar o Pix:", erro);
       }
 
       if (navigator.vibrate) {
@@ -377,52 +365,69 @@
       }
 
       if (tipo === "copiar") {
-        abrirModal();
+        abrirModal(
+          "Código Pix Copiado!",
+          "Abra o aplicativo do seu banco, escolha Pix Copia e Cola " +
+          "e confira os dados do destinatário antes de confirmar."
+        );
         return;
       }
 
+      /*
+       * PAGBANK:
+       * Mantido exatamente o endereço original informado.
+       */
       if (tipo === "pagbank") {
-        /*
-         * Preservado exatamente como na versão original
-         * que você informou estar funcionando.
-         */
         window.location.href =
           "https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download";
         return;
       }
 
+      /*
+       * CARTEIRA DO GOOGLE:
+       * Abre a página oficial do aplicativo na Play Store.
+       */
       if (tipo === "wallet") {
-        /*
-         * Não utilizar o comando genérico que estava
-         * encaminhando para o Itaú.
-         *
-         * Não existe aqui um link de pagamento Pix
-         * da Carteira do Google validado para este fluxo.
-         */
-        abrirModal();
+        window.location.href =
+          "https://play.google.com/store/apps/details?id=com.google.android.apps.walletnfcrel";
         return;
       }
 
+      /*
+       * BANCO DO BRASIL:
+       * Restaura o esquema do código original.
+       */
       if (tipo === "bb") {
-        // Esquema original do Banco do Brasil
         window.location.href = "bancodobrasil://";
 
         setTimeout(function() {
           if (!document.hidden) {
-            abrirModal();
+            abrirModal(
+              "Banco do Brasil",
+              "Se o aplicativo não abriu, utilize o código Pix copiado. " +
+              "Abra o Banco do Brasil, selecione Pix e depois Pix Copia e Cola."
+            );
           }
         }, 1000);
 
         return;
       }
 
+      /*
+       * ITAÚ:
+       * Restaura o esquema que estava associado ao botão
+       * Carteira do Google na versão original.
+       */
       if (tipo === "itau") {
-        // Esquema original que você informou funcionar
         window.location.href = "itau://";
 
         setTimeout(function() {
           if (!document.hidden) {
-            abrirModal();
+            abrirModal(
+              "Banco Itaú",
+              "Se o aplicativo não abriu, utilize o código Pix copiado. " +
+              "Abra o Itaú, selecione Pix e depois Pix Copia e Cola."
+            );
           }
         }, 1000);
 
