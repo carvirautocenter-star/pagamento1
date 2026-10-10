@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagamento via Pix - Dimas Galdino da Silva</title>
+  <style>
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+    }
+    body { 
+      background-color: #f0f2f5; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      min-height: 100vh; 
+      padding: 20px 12px; 
+    }
+    .card { 
+      background: #ffffff; 
+      border-radius: 20px; 
+      padding: 24px 18px; 
+      max-width: 400px; 
+      width: 100%; 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06); 
+      text-align: center; 
+    }
+    .badge { 
+      background: #e8f5e9; 
+      color: #2e7d32; 
+      font-weight: 700; 
+      font-size: 11px; 
+      padding: 4px 12px; 
+      border-radius: 20px; 
+      display: inline-block; 
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    h2 { 
+      color: #1a1a1a; 
+      font-size: 18px; 
+      font-weight: 700;
+      margin-bottom: 4px; 
+    }
+    p.subtitle { 
+      color: #666; 
+      font-size: 13px; 
+      margin-bottom: 20px; 
+    }
+    
+    /* Botão Principal Destaque PagBank */
+    .btn-main { 
+      background: #00b140; 
+      color: #ffffff; 
+      font-size: 16px; 
+      font-weight: 700; 
+      border: none; 
+      border-radius: 14px; 
+      padding: 16px; 
+      width: 100%; 
+      cursor: pointer; 
+      transition: all 0.2s ease; 
+      box-shadow: 0 4px 12px rgba(0, 177, 64, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-main:active { 
+      transform: scale(0.98);
+      background: #008f33; 
+    }
+
+    .divider {
+      margin: 20px 0 16px 0;
+      display: flex;
+      align-items: center;
+      color: #888;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .divider::before, .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    .divider span {
+      padding: 0 10px;
+    }
+
+    /* Grid de Outros Bancos */
+    .banks-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .btn-bank {
+      background: #f8f9fa;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-bank:active {
+      background: #e2e8f0;
+      transform: scale(0.97);
+    }
+
+    .status-msg { 
+      margin-top: 16px; 
+      padding: 12px;
+      background: #e8f5e9;
+      border-radius: 10px;
+      font-size: 13px; 
+      color: #2e7d32; 
+      font-weight: 600; 
+      display: none; 
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <span class="badge">● Recebedor Pix</span>
+    <h2>DIMAS GALDINO DA SILVA</h2>
+    <p class="subtitle">Toque no botão do seu banco para copiar a chave Pix e abrir o aplicativo.</p>
+
+    <!-- Botão de Destaque PagBank -->
+    <button class="btn-main" onclick="abrirBanco('pagbank')">
+      <span>Pagar com PagBank</span>
+    </button>
+
+    <div class="divider">
+      <span>ou escolha seu banco</span>
+    </div>
+
+    <!-- Outros Bancos em Grid -->
+    <div class="banks-grid">
+      <button class="btn-bank" onclick="abrirBanco('nubank')">💜 Nubank</button>
+      <button class="btn-bank" onclick="abrirBanco('itau')">🟧 Itaú</button>
+      <button class="btn-bank" onclick="abrirBanco('bradesco')">🟥 Bradesco</button>
+      <button class="btn-bank" onclick="abrirBanco('mercadopago')">🟦 Mercado Pago</button>
+      <button class="btn-bank" onclick="abrirBanco('bb')">🟡 Banco do Brasil</button>
+      <button class="btn-bank" onclick="abrirBanco('inter')">🟠 Inter</button>
+      <button class="btn-bank" onclick="abrirBanco('caixa')">🔵 Caixa</button>
+      <button class="btn-bank" onclick="abrirBanco('outro')">📋 Apenas Copiar</button>
+    </div>
+
+    <div id="status" class="status-msg">
+      ✓ Código Pix copiado com sucesso!
+    </div>
+  </div>
+
+  <script>
+    const pixPayload = "00020126580014br.gov.bcb.pix0136d4f08689-848c-4bd7-bbbc-bd364fc59cc427600016BR.COM.PAGSEGURO01368FD85AD6-2954-40F4-8AEE-D823EF21A4895204753853039865802BR5922DIMAS GALDINO DA SILVA6015Sao Jose do Ser62290525PAGS0000000002610100651776304106A";
+
+    // Pacotes Android dos principais bancos no Brasil
+    const bankPackages = {
+      pagbank: "br.com.uol.ps.myaccount",
+      nubank: "com.nu.production",
+      itau: "com.itau",
+      bradesco: "br.com.bradesco.netemp",
+      mercadopago: "com.mercadopago.wallet",
+      bb: "br.com.bb.android",
+      inter: "br.com.intermedium",
+      caixa: "br.com.gft.mobicage.caixa.economica.federal"
+    };
+
+    async function copiarCodigo() {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(pixPayload);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = pixPayload;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+    }
+
+    async function abrirBanco(bancoKey) {
+      try {
+        // 1. Sempre copia o código primeiro
+        await copiarCodigo();
+
+        const statusEl = document.getElementById('status');
+        
+        if (bancoKey === 'outro') {
+          statusEl.innerText = "✓ Código Pix copiado! Abra seu app do banco e selecione 'Pix Copia e Cola'.";
+          statusEl.style.display = 'block';
+          return;
+        }
+
+        statusEl.innerText = "✓ Código copiado! Abrindo o aplicativo...";
+        statusEl.style.display = 'block';
+
+        // 2. Direciona para o pacote do Android se for mobile
+        const packageName = bankPackages[bancoKey];
+        const isAndroid = /Android/i.test(navigator.userAgent);
+
+        if (isAndroid && packageName) {
+          setTimeout(() => {
+            window.location.href = `intent://#Intent;package=${packageName};action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end`;
+          }, 300);
+        } else {
+          setTimeout(() => {
+            statusEl.innerText = "✓ Código Pix copiado! Abra o app do seu banco.";
+          }, 1000);
+        }
+
+      } catch (err) {
+        alert("Código Pix copiado! Abra seu app bancário e cole na opção Pix.");
+      }
+    }
+  </script>
+
+</body>
+</html>
