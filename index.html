@@ -74,7 +74,7 @@
       background: #ffffff;
       border: 1px solid #e2e8f0;
       border-radius: 14px;
-      padding: 14px 16px;
+      padding: 12px 16px;
       font-size: 14px;
       font-weight: 600;
       color: #2d3748;
@@ -82,7 +82,7 @@
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      gap: 12px;
+      gap: 14px;
       transition: all 0.2s ease;
       box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
@@ -91,14 +91,12 @@
       background: #f8fafc;
     }
 
-    /* Ícones das logos em SVG integrados */
-    .btn-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    /* Estilização e imagens dos ícones oficiais */
+    .btn-icon-img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      border-radius: 6px;
       flex-shrink: 0;
     }
 
@@ -107,15 +105,18 @@
       color: #ffffff;
       border: none;
       font-weight: 700;
-      margin-top: 4px;
+      margin-top: 6px;
       justify-content: center;
       box-shadow: 0 4px 12px rgba(0, 102, 255, 0.25);
     }
     .btn-copy-only:active {
       background: #0052cc;
     }
+    .btn-copy-only img {
+      filter: brightness(0) invert(1);
+    }
 
-    /* Style para o Pop-up Modal de Instruções */
+    /* Pop-up Modal de Instruções */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -185,53 +186,31 @@
     <div class="options-grid">
       <!-- 1. Carteira Google -->
       <button class="btn-option" onclick="abrirOpcao('wallet')">
-        <div class="btn-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M19 7H5c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2z" fill="#4285F4"/>
-            <path d="M16 12c.83 0 1.5.67 1.5 1.5S16.83 15 16 15s-1.5-.67-1.5-1.5.67-1.5 1.5-1.5z" fill="#FFF"/>
-            <path d="M19 5H5c-1.1 0-2 .9-2 2h18c0-1.1-.9-2-2-2z" fill="#34A853"/>
-          </svg>
-        </div>
+        <img class="btn-icon-img" src="https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Google_Wallet_icon.svg/3840px-Google_Wallet_icon.svg.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=thumbnail" alt="Google Wallet">
         <span>Carteira do Google</span>
       </button>
 
       <!-- 2. PagBank / PagSeguro -->
       <button class="btn-option" onclick="abrirOpcao('pagbank')">
-        <div class="btn-icon" style="background:#00b140;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFF">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
-          </svg>
-        </div>
+        <img class="btn-icon-img" src="https://ribnet.com.br/wp-content/uploads/2024/04/pagbank.png" alt="PagBank">
         <span>PagBank (PagSeguro)</span>
       </button>
 
       <!-- 3. Banco do Brasil -->
       <button class="btn-option" onclick="abrirOpcao('bb')">
-        <div class="btn-icon" style="background:#fcf800;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#003399">
-            <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.8L18.6 8 12 11.2 5.4 8 12 4.8zM4 9.6l7 3.5v7.1l-7-3.5V9.6zm16 7.1l-7 3.5v-7.1l7-3.5v7.1z"/>
-          </svg>
-        </div>
+        <img class="btn-icon-img" src="https://assets.hgbrasil.com/finance/companies/big/banco-do-brasil.png" alt="Banco do Brasil">
         <span>Banco do Brasil</span>
       </button>
 
       <!-- 4. Itaú -->
       <button class="btn-option" onclick="abrirOpcao('itau')">
-        <div class="btn-icon" style="background:#ec7000; border-radius: 6px;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#FFF">
-            <rect x="2" y="2" width="20" height="20" rx="4" fill="#ec7000"/>
-            <text x="12" y="16" font-size="11" font-weight="bold" fill="#FFF" text-anchor="middle">itau</text>
-          </svg>
-        </div>
+        <img class="btn-icon-img" src="https://upload.wikimedia.org/wikipedia/commons/2/2d/2023_Ita%C3%BA_Unibanco_Logo.png?utm_source=pt.wikipedia.org&utm_campaign=index&utm_content=original" alt="Itaú">
         <span>Banco Itaú</span>
       </button>
 
       <!-- 5. Apenas Copiar Código -->
       <button class="btn-option btn-copy-only" onclick="abrirOpcao('copiar')">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-        </svg>
+        <img class="btn-icon-img" src="https://cdn-icons-png.flaticon.com/512/84/84185.png" alt="Copiar">
         <span>Apenas Copiar Código Pix</span>
       </button>
     </div>
@@ -296,12 +275,12 @@
 
       const isAndroid = /Android/i.test(navigator.userAgent);
 
-      // 2. Executa a Intent específica de acordo com a escolha do usuário
+      // 2. Dispara a Intent exata e isolada para cada banco/opção
       setTimeout(() => {
         if (tipo === 'wallet') {
           if (isAndroid) {
-            // Direciona especificamente para a Carteira do Google / Google Pay
-            window.location.href = "intent://wallet#Intent;scheme=https;package=com.google.android.apps.walletnfcrel;S.android.intent.extra.TEXT=" + encodeURIComponent(pixPayload) + ";end";
+            // Intent para solicitar abertura de seletor / carteira via compartilhamento nativo de texto
+            window.location.href = "intent://#Intent;action=android.intent.action.SEND;type=text/plain;S.android.intent.extra.TEXT=" + encodeURIComponent(pixPayload) + ";end";
           } else {
             abrirModal();
           }
@@ -309,14 +288,12 @@
           window.location.href = "https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download";
         } else if (tipo === 'bb') {
           if (isAndroid) {
-            // Intent direta para o pacote do Banco do Brasil
             window.location.href = "intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=br.com.bb.android;end";
           } else {
             window.location.href = "bancodobrasil://";
           }
         } else if (tipo === 'itau') {
           if (isAndroid) {
-            // Intent direta para o pacote do Itaú
             window.location.href = "intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.itau;end";
           } else {
             window.location.href = "itau://";
