@@ -91,7 +91,6 @@
       background: #f8fafc;
     }
 
-    /* Estilização e imagens dos ícones oficiais */
     .btn-icon-img {
       width: 32px;
       height: 32px;
@@ -135,7 +134,6 @@
     }
     .modal-overlay.active .modal-content { transform: translateY(0); }
     
-    /* Botão X para fechar o Modal */
     .modal-close-x {
       position: absolute;
       top: 16px;
@@ -216,7 +214,7 @@
     </div>
   </div>
 
-  <!-- Modal de Instruções quando clica em Apenas Copiar -->
+  <!-- Modal de Instruções -->
   <div class="modal-overlay" id="modalInstrucoes" onclick="fecharModalFora(event)">
     <div class="modal-content">
       <button class="modal-close-x" onclick="fecharModal()">&times;</button>
@@ -275,31 +273,32 @@
 
       const isAndroid = /Android/i.test(navigator.userAgent);
 
-      // 2. Dispara a Intent exata e isolada para cada banco/opção
       setTimeout(() => {
         if (tipo === 'wallet') {
           if (isAndroid) {
-            // Intent para solicitar abertura de seletor / carteira via compartilhamento nativo de texto
-            window.location.href = "intent://#Intent;action=android.intent.action.SEND;type=text/plain;S.android.intent.extra.TEXT=" + encodeURIComponent(pixPayload) + ";end";
+            // Dispara a Intent de visualização Pix sem forçar o pacote para não enviar para o Itaú nem para a Play Store
+            window.location.href = "intent://#Intent;action=android.intent.action.VIEW;type=text/plain;S.android.intent.extra.TEXT=" + encodeURIComponent(pixPayload) + ";end";
           } else {
             abrirModal();
           }
         } else if (tipo === 'pagbank') {
           window.location.href = "https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download";
         } else if (tipo === 'bb') {
-          if (isAndroid) {
-            window.location.href = "intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=br.com.bb.android;end";
-          } else {
-            window.location.href = "bancodobrasil://";
-          }
+          // Tenta acionar o esquema direto do Banco do Brasil
+          window.location.href = "bancodobrasil://";
+          // Se o app não estiver instalado ou não responder, abre o modal em 1 segundo em vez de ir para a Play Store
+          setTimeout(() => {
+            if (!document.hidden) abrirModal();
+          }, 1000);
         } else if (tipo === 'itau') {
-          if (isAndroid) {
-            window.location.href = "intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.itau;end";
-          } else {
-            window.location.href = "itau://";
-          }
+          // Tenta acionar o esquema direto do Itaú
+          window.location.href = "itau://";
+          // Se o app não responder, exibe o modal amigável com a cópia confirmada
+          setTimeout(() => {
+            if (!document.hidden) abrirModal();
+          }, 1000);
         }
-      }, 250);
+      }, 200);
     }
   </script>
 
