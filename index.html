@@ -5,172 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pagamento via Pix - I-TIQUETA</title>
   <style>
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-    }
-    body { 
-      background-color: #f0f2f5; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      min-height: 100vh; 
-      padding: 20px 14px; 
-    }
-    .card { 
-      background: #ffffff; 
-      border-radius: 24px; 
-      padding: 28px 20px; 
-      max-width: 390px; 
-      width: 100%; 
-      box-shadow: 0 12px 30px rgba(0,0,0,0.08); 
-      text-align: center; 
-    }
-    .brand {
-      font-size: 22px;
-      font-weight: 800;
-      color: #1a1a1a;
-      letter-spacing: -0.5px;
-      margin-bottom: 16px;
-    }
-    .brand span {
-      color: #0066ff;
-    }
-    .badge { 
-      background: #e8f5e9; 
-      color: #2e7d32; 
-      font-weight: 700; 
-      font-size: 11px; 
-      padding: 4px 12px; 
-      border-radius: 20px; 
-      display: inline-block; 
-      margin-bottom: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    h2 { 
-      color: #1a1a1a; 
-      font-size: 18px; 
-      font-weight: 700;
-      margin-bottom: 4px; 
-    }
-    p.subtitle { 
-      color: #666; 
-      font-size: 13px; 
-      line-height: 1.4;
-      margin-bottom: 20px; 
-    }
-    
-    /* Grid de Opções de Bancos */
-    .options-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .btn-option {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 14px;
-      padding: 12px 16px;
-      font-size: 14px;
-      font-weight: 600;
-      color: #2d3748;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 14px;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-    }
-    .btn-option:active {
-      transform: scale(0.98);
-      background: #f8fafc;
-    }
-
-    .btn-icon-img {
-      width: 32px;
-      height: 32px;
-      object-fit: contain;
-      border-radius: 6px;
-      flex-shrink: 0;
-    }
-
-    .btn-copy-only {
-      background: #0066ff;
-      color: #ffffff;
-      border: none;
-      font-weight: 700;
-      margin-top: 6px;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(0, 102, 255, 0.25);
-    }
-    .btn-copy-only:active {
-      background: #0052cc;
-    }
-    .btn-copy-only img {
-      filter: brightness(0) invert(1);
-    }
-
-    /* Pop-up Modal de Instruções */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex; align-items: flex-end; justify-content: center;
-      opacity: 0; visibility: hidden; transition: all 0.3s ease; z-index: 1000;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: #f0f2f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px 14px; }
+    .card { background: #ffffff; border-radius: 24px; padding: 28px 20px; max-width: 390px; width: 100%; box-shadow: 0 12px 30px rgba(0,0,0,0.08); text-align: center; }
+    .brand { font-size: 22px; font-weight: 800; color: #1a1a1a; letter-spacing: -0.5px; margin-bottom: 16px; }
+    .brand span { color: #0066ff; }
+    .badge { background: #e8f5e9; color: #2e7d32; font-weight: 700; font-size: 11px; padding: 4px 12px; border-radius: 20px; display: inline-block; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    h2 { color: #1a1a1a; font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    p.subtitle { color: #666; font-size: 13px; line-height: 1.4; margin-bottom: 20px; }
+    .options-grid { display: flex; flex-direction: column; gap: 10px; }
+    .btn-option { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px 16px; font-size: 14px; font-weight: 600; color: #2d3748; cursor: pointer; display: flex; align-items: center; justify-content: flex-start; gap: 14px; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+    .btn-option:active { transform: scale(0.98); background: #f8fafc; }
+    .btn-icon-img { width: 32px; height: 32px; object-fit: contain; border-radius: 6px; flex-shrink: 0; }
+    .btn-copy-only { background: #0066ff; color: #ffffff; border: none; font-weight: 700; margin-top: 6px; justify-content: center; box-shadow: 0 4px 12px rgba(0, 102, 255, 0.25); }
+    .btn-copy-only:active { background: #0052cc; }
+    .btn-copy-only img { filter: brightness(0) invert(1); }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; align-items: flex-end; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s ease; z-index: 1000; }
     .modal-overlay.active { opacity: 1; visibility: visible; }
-    .modal-content {
-      position: relative;
-      background: #ffffff; width: 100%; max-width: 420px;
-      border-top-left-radius: 24px; border-top-right-radius: 24px;
-      padding: 28px 22px 36px 22px; transform: translateY(100%);
-      transition: transform 0.3s ease;
-      text-align: center;
-    }
+    .modal-content { position: relative; background: #ffffff; width: 100%; max-width: 420px; border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 28px 22px 36px 22px; transform: translateY(100%); transition: transform 0.3s ease; text-align: center; }
     .modal-overlay.active .modal-content { transform: translateY(0); }
-    
-    .modal-close-x {
-      position: absolute;
-      top: 16px;
-      right: 18px;
-      background: #f0f2f5;
-      border: none;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      font-size: 18px;
-      font-weight: bold;
-      color: #666;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-    .modal-close-x:active {
-      background: #e2e8f0;
-    }
-
-    .modal-icon {
-      width: 48px; height: 48px; background: #e8f5e9; color: #2e7d32;
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 14px auto; font-size: 24px; font-weight: bold;
-    }
+    .modal-close-x { position: absolute; top: 16px; right: 18px; background: #f0f2f5; border: none; width: 32px; height: 32px; border-radius: 50%; font-size: 18px; font-weight: bold; color: #666; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+    .modal-close-x:active { background: #e2e8f0; }
+    .modal-icon { width: 48px; height: 48px; background: #e8f5e9; color: #2e7d32; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px auto; font-size: 24px; font-weight: bold; }
     .modal-title { font-size: 18px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
     .modal-text { font-size: 13px; color: #555; line-height: 1.5; margin-bottom: 20px; }
-    .btn-close-modal {
-      background: #0066ff; border: none; border-radius: 12px; padding: 14px;
-      width: 100%; font-size: 14px; font-weight: 700; color: #ffffff; cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-close-modal:active {
-      background: #0052cc;
-    }
+    .btn-close-modal { background: #0066ff; border: none; border-radius: 12px; padding: 14px; width: 100%; font-size: 14px; font-weight: 700; color: #ffffff; cursor: pointer; transition: background 0.2s; }
+    .btn-close-modal:active { background: #0052cc; }
   </style>
 </head>
 <body>
@@ -285,48 +145,51 @@
         return;
       }
 
-      // 4. Define o pacote Android / scheme iOS para cada app
-      let androidPackage = '';
-      let iosScheme = '';
+      // 4. Define a URL de abertura para cada app
+      let appUrl = '';
+      let fallbackNeeded = false;
 
       switch (tipo) {
         case 'wallet':
-          androidPackage = 'com.google.android.apps.walletnfcrel';
-          iosScheme = 'googlewallet://';
+          if (isAndroid) {
+            // Intent com fallback para evitar abrir a Play Store
+            appUrl = 'intent://#Intent;package=com.google.android.apps.walletnfcrel;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;S.browser_fallback_url=' + encodeURIComponent('https://pagamento1.vercel.app/') + ';end';
+          } else if (isIOS) {
+            appUrl = 'googlewallet://'; // Tenta abrir o app no iOS
+          } else {
+            fallbackNeeded = true;
+          }
           break;
         case 'bb':
-          androidPackage = 'br.com.bb.android';
-          iosScheme = 'bancodobrasil://';
+          if (isAndroid) {
+            appUrl = 'bancodobrasil://';
+          } else if (isIOS) {
+            appUrl = 'bancodobrasil://';
+          } else {
+            fallbackNeeded = true;
+          }
           break;
         case 'itau':
-          androidPackage = 'com.itau';
-          iosScheme = 'itau://';
+          if (isAndroid) {
+            appUrl = 'itau://';
+          } else if (isIOS) {
+            appUrl = 'itau://';
+          } else {
+            fallbackNeeded = true;
+          }
           break;
       }
 
-      let tentouAbrir = false;
-
-      // 5. Abre o app específico
-      if (isAndroid && androidPackage) {
-        const intentUrl =
-          'intent://#Intent;' +
-          'package=' + androidPackage + ';' +
-          'action=android.intent.action.MAIN;' +
-          'category=android.intent.category.LAUNCHER;' +
-          'end';
-        window.location.href = intentUrl;
-        tentouAbrir = true;
-      } else if (isIOS && iosScheme) {
-        window.location.href = iosScheme;
-        tentouAbrir = true;
-      }
-
-      // 6. Fallback: se não for Android nem iOS, ou o app não abrir em 1,5s, mostra o modal
-      if (!tentouAbrir) {
+      // 5. Abre o app ou mostra o modal
+      if (fallbackNeeded || !appUrl) {
         abrirModal();
         return;
       }
 
+      // Tenta abrir o app
+      window.location.href = appUrl;
+
+      // 6. Fallback: se o app não abrir em 1,5s, mostra o modal
       setTimeout(() => {
         if (!document.hidden) {
           abrirModal();
