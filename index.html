@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -264,7 +263,7 @@
         <span>Banco Itaú</span>
       </button>
 
-      <!-- PAGBANK: ENDEREÇO ORIGINAL PRESERVADO -->
+      <!-- PAGBANK -->
       <button
         type="button"
         class="btn-option"
@@ -290,6 +289,20 @@
           alt="Banco do Brasil"
         >
         <span>Banco do Brasil</span>
+      </button>
+
+      <!-- NUBANK -->
+      <button
+        type="button"
+        class="btn-option"
+        onclick="abrirOpcao('nubank')"
+      >
+        <img
+          class="btn-icon-img"
+          src="https://upload.wikimedia.org/wikipedia/commons/f/f7/Nubank_logo_2021.svg"
+          alt="Nubank"
+        >
+        <span>Nubank</span>
       </button>
 
       <!-- CARTEIRA DO GOOGLE -->
@@ -380,7 +393,6 @@
       }
 
       const textarea = document.createElement("textarea");
-
       textarea.value = pixPayload;
       textarea.setAttribute("readonly", "");
       textarea.style.position = "fixed";
@@ -392,7 +404,6 @@
       textarea.select();
 
       const copiado = document.execCommand("copy");
-
       document.body.removeChild(textarea);
 
       if (!copiado) {
@@ -404,14 +415,12 @@
     // MODAL
     function abrirModal() {
       const modal = document.getElementById("modalInstrucoes");
-
       modal.classList.add("active");
       modal.setAttribute("aria-hidden", "false");
     }
 
     function fecharModal() {
       const modal = document.getElementById("modalInstrucoes");
-
       modal.classList.remove("active");
       modal.setAttribute("aria-hidden", "true");
     }
@@ -451,50 +460,46 @@
 
 
       // ITAÚ
-      // Monta a Intent dinamicamente com o payload Pix.
-      // Usa o formato informado pelo usuário.
       if (tipo === "itau") {
-
         const intentItau =
           "intent://#Intent;" +
           "action=android.intent.action.VIEW;" +
           "type=text/plain;" +
-          "S.android.intent.extra.TEXT=" +
-          encodeURIComponent(pixPayload) +
-          ";end";
+          "S.android.intent.extra.TEXT=" + encodeURIComponent(pixPayload) + ";" +
+          "package=com.itau;" +
+          "end";
 
         window.location.href = intentItau;
-
-        setTimeout(() => {
-          if (!document.hidden) {
-            abrirModal();
-          }
-        }, 1500);
-
+        setTimeout(() => { if (!document.hidden) abrirModal(); }, 1500);
         return;
       }
 
 
       // PAGBANK / PAGSEGURO
-      // Mantém o endereço original, sem modificações.
       if (tipo === "pagbank") {
+        const intentPagBank =
+          "intent://#Intent;" +
+          "action=android.intent.action.VIEW;" +
+          "type=text/plain;" +
+          "S.android.intent.extra.TEXT=" + encodeURIComponent(pixPayload) + ";" +
+          "package=br.com.uol.ps.myaccount;" +
+          "S.browser_fallback_url=https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download;" +
+          "end";
 
-        window.location.href =
-          "https://pagseguro.uol.com.br/para-seu-negocio/aplicativos/minha-conta/download";
-
+        window.location.href = intentPagBank;
+        setTimeout(() => { if (!document.hidden) abrirModal(); }, 1500);
         return;
       }
 
 
-      // BANCO DO BRASIL
-      // Tenta iniciar o aplicativo instalado diretamente.
+      // BANCO DO BRASIL (CORRIGIDO)
       if (tipo === "bb") {
-
         const intentBB =
-          "intent://#Intent;" +
-          "action=android.intent.action.MAIN;" +
-          "category=android.intent.category.LAUNCHER;" +
+          "intent://pix.bcb.gov.br/qr/v2/" + encodeURIComponent(pixPayload) + "#Intent;" +
+          "action=android.intent.action.VIEW;" +
+          "scheme=https;" +
           "package=br.com.bb.android;" +
+          "S.browser_fallback_url=https://play.google.com/store/apps/details?id=br.com.bb.android;" +
           "end";
 
         window.location.href = intentBB;
@@ -509,25 +514,32 @@
       }
 
 
-      // CARTEIRA DO GOOGLE
-      // Tenta iniciar a Wallet instalada diretamente.
-      if (tipo === "wallet") {
+      // NUBANK
+      if (tipo === "nubank") {
+        const intentNubank =
+          "intent://#Intent;" +
+          "action=android.intent.action.VIEW;" +
+          "package=com.nu.production;" +
+          "S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.nu.production;" +
+          "end";
 
+        window.location.href = intentNubank;
+        setTimeout(() => { if (!document.hidden) abrirModal(); }, 1500);
+        return;
+      }
+
+
+      // CARTEIRA DO GOOGLE (CORRIGIDO)
+      if (tipo === "wallet") {
         const intentWallet =
           "intent://#Intent;" +
-          "action=android.intent.action.MAIN;" +
-          "category=android.intent.category.LAUNCHER;" +
+          "action=android.intent.action.VIEW;" +
           "package=com.google.android.apps.walletnfcrel;" +
+          "S.browser_fallback_url=https://play.google.com/store/apps/details?id=com.google.android.apps.walletnfcrel;" +
           "end";
 
         window.location.href = intentWallet;
-
-        setTimeout(() => {
-          if (!document.hidden) {
-            abrirModal();
-          }
-        }, 1500);
-
+        setTimeout(() => { if (!document.hidden) abrirModal(); }, 1500);
         return;
       }
     }
